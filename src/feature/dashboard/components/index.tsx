@@ -11,7 +11,7 @@ const DashBoard = () => {
     <div className='flex flex-col gap-[16px]'>
        <DashboardHeader/>
           <DashboardMetrics/>
-        <div className='grid grid-cols-1 lg:grid-cols-[60.5%_30%] gap-[16px]'>
+        <div className='grid grid-cols-1 xl:grid-cols-[60.5%_30%] 2xl:grid-cols-[70%_30%] gap-[16px]'>
           <div className='flex flex-col gap-[16px]'>
             <PipelineCard/>
             <RecentActivitiesCard/>

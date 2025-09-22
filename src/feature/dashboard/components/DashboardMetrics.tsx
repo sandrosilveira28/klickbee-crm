@@ -13,7 +13,7 @@ const DashboardMetrics = () => {
   const metrics = getMetricsData()
 
   return (
-    <section className=" h-[156px] shadow-sm rounded-xl border border-[var(--border-gray)] bg-white opacity-100 ">
+    <section className=" h-[156px] w-auto shadow-sm rounded-xl border border-[var(--border-gray)] bg-white opacity-100 ">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-0 h-full">
         {metrics.map((metric, index) => (
           <div key={metric.title} className={`flex h-full flex-col ${index > 0}`}>

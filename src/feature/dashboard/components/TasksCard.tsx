@@ -8,7 +8,7 @@ export default function TasksCard() {
   const { lateAssignmentsNotice, tasks, progress } = getTasksOverview()
 
   return (
-    <section className="w-[362px] h-[488px] rounded-xl border border-[var(--border-gray)] shadow-sm bg-white flex flex-col">
+    <section className=" xl:w-[367px] 2xl:w-auto h-[488px] rounded-xl border border-[var(--border-gray)] shadow-sm bg-white flex flex-col">
       {/* Header */}
       <div className="flex items-center border-b border-[var(--border-gray)] h-[56px] justify-between p-[16px]">
         <h3 className="text-sm font-semibold text-foreground">Tasks (240)</h3>

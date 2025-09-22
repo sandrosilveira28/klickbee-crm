@@ -8,7 +8,7 @@ export default function AgendaCard() {
   const items = getAgenda()
 
   return (
-    <section className="w-[362px] h-[500px] shadow-sm rounded-xl border border-[var(--border-gray)] bg-white flex flex-col">
+    <section className="xl:w-[367px] 2xl:w-auto  h-[500px] shadow-sm rounded-xl border border-[var(--border-gray)] bg-white flex flex-col">
       {/* Header */}
       <div className="flex items-center h-[56px] justify-between p-[16px] border-b border-[var(--border-gray)]">
         <h3 className="text-sm font-semibold text-[var(--foreground)]">Agenda (12)</h3>

@@ -1,8 +1,7 @@
-import AppLayout from "@/components/layout/AppLayout";
+import DashBoard from "@/feature/dashboard/components";
 
 export default function Home() {
   return (
- <AppLayout />
-
+    <DashBoard/>
   );
 }

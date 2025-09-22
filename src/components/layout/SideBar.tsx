@@ -2,8 +2,10 @@
 import React from 'react'
 import SidebarItem from '../ui/SideBarItems';
 import { Home, Settings } from 'lucide-react';
+import { useRouter } from "next/navigation";
 
 export default function SideBar() {
+    const router = useRouter();
     return (
         <div className='w-[256px] h-[100dvh] flex flex-col border-r  border-[var(--border-gray)]'>
             <div className='h-[68px] p-2  '>
@@ -22,7 +24,7 @@ export default function SideBar() {
                 <div className='space-y-1 '>
                     <SidebarItem icon={<Home size={18} />} label="Dashboard" active />
                     <SidebarItem
-                        icon={<img src="\sideBarIcons\handshake.svg" alt="Hans Shake" className='w-4 h-4 ' />} label="Deals" />
+                        icon={<img src="\sideBarIcons\handshake.svg" alt="Hans Shake" className='w-4 h-4 ' />} label="Deals" onClick={() => router.push('/deals')} />
                     <SidebarItem icon={<img src="\sideBarIcons\layout-list.svg" alt="Hans Shake" className='w-4 h-4 ' />} label="To-Do" />
                     <SidebarItem icon={<img src="\sideBarIcons\presentation.svg" alt="Hans Shake" className='w-4 h-4 ' />} label="Meetings" />
                     <SidebarItem icon={<img src="\sideBarIcons\trending-up.svg" alt="Hans Shake" className='w-4 h-4 ' />} label="Prospects" />

@@ -1,10 +1,10 @@
 import React from 'react'
-import { DashboardHeader } from './dashboard/components/DashBoard-header'
-import DashboardMetrics from './dashboard/components/DashboardMetrics'
-import PipelineCard from './dashboard/components/PipelineCard'
-import RecentActivitiesCard from './dashboard/components/RecentActivitiesCard'
-import TasksCard from './dashboard/components/TasksCard'
-import AgendaCard from './dashboard/components/AgendaCard'
+import { DashboardHeader } from './DashBoard-header'
+import DashboardMetrics from './DashboardMetrics'
+import PipelineCard from './PipelineCard'
+import RecentActivitiesCard from './RecentActivitiesCard'
+import TasksCard from './TasksCard'
+import AgendaCard from './AgendaCard'
 
 const DashBoard = () => {
   return (

@@ -99,7 +99,7 @@ const TableRow = <T,>({
       {columns.map((column) => (
         <td 
           key={column.key} 
-          className="px-6 py-3 text-sm text-gray-900 whitespace-nowrap"
+          className="px-6 py-3 text-sm text-[var(--foreground)] whitespace-nowrap"
           style={{ width: column.width }}
         >
           {column.avatar ? (
@@ -233,7 +233,7 @@ export const Table = <T,>({
           <thead className="">
             <tr>
               {selectable && (
-                <th className="px-5 py-3 text-left">
+                <th className="px-4 py-3 text-left">
                   <div className="relative">
                     <input
                       type="checkbox"

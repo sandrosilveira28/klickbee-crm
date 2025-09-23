@@ -50,9 +50,9 @@ export function DealsHeader() {
             px-3 text-sm shadow-sm
           "
         >
-          <Filter className="h-4 w-4" />
+          <img src="\icons\filter.svg" alt="export-file" className="w-[17px] h-4 "/>
           Filter
-          <span className="ml-2 rounded-full bg-primary px-1.5 text-xs text-primary-foreground">
+          <span className=" h-[20px]  w-[28px] text-var[(--foreground)]   bg-[#F4F4F5] rounded-md px-0.5 py-0.5 text-xs ">
             2
           </span>
         </button>
@@ -71,15 +71,17 @@ export function DealsHeader() {
         </div>
 
         {/* Export */}
-        <Button >
-          <Download className="h-4 w-4 mr-2" />
+        <Button
+          leadingIcon={<img src="\icons\File.svg" alt="export-file" className="w-[17px] h-4 "/>} 
+           >
           Export
         </Button>
 
         {/* Import */}
-        <Button >
-          <Upload className="h-4 w-4 mr-2" />
-          Import
+        <Button 
+         leadingIcon={<img src="\icons\upload.svg" alt="upload" className="w-[17px] h-4 "/>} 
+        >
+         Import
         </Button>
 
         {/* New Deal */}

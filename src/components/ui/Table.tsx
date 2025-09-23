@@ -233,7 +233,7 @@ export const Table = <T,>({
           <thead className="">
             <tr>
               {selectable && (
-                <th className="px-5 py-3 text-left">
+                <th className="px-4 py-3 text-left">
                   <div className="relative">
                     <input
                       type="checkbox"

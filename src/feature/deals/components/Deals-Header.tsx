@@ -1,13 +1,29 @@
 "use client"
 import { Button } from "@/components/ui/Button"
 import { DropDown } from "@/components/ui/DropDown"
-import { Search, Filter, LayoutGrid, List, Download, Upload, Plus } from "lucide-react"
+import { Search, LayoutGrid, List, Download, Upload, Plus } from "lucide-react"
 import { useState } from "react"
+import Filter from "@/components/filter"
+import { filterData, type FilterData } from "@/feature/deals/libs/filterData"
+
 
 const userOptions = [{ value: "Closed", label: "Closed Time" }]
-
+const searchableCategories: (keyof FilterData)[] = ["owner", "tags"];
 export function DealsHeader() {
   const [selectedUser, setSelectedUser] = useState("Closed")
+  const [showFilter, setShowFilter] = useState(false)
+  const [filters, setFilters] = useState(filterData);
+  const [searchQueries, setSearchQueries] = useState<Record<string, string>>({});
+
+  // ✅ Toggle checkbox
+  const handleToggle = (category: keyof FilterData, id: string) => {
+  setFilters((prev) => ({
+    ...prev,
+    [category]: prev[category].map((item) =>
+      item.id === id ? { ...item, checked: !item.checked } : item
+    ),
+  }));
+};
 
   return (
     <div
@@ -47,8 +63,9 @@ export function DealsHeader() {
           className="
             flex items-center h-[36px] gap-2
             bg-card border border-[var(--border-gray)] rounded-md
-            px-3 text-sm shadow-sm
+            px-3 text-sm shadow-sm cursor-pointer
           "
+          onClick={() => setShowFilter((prev: boolean) => !prev)}
         >
           <img src="\icons\filter.svg" alt="export-file" className="w-[17px] h-4 "/>
           Filter
@@ -90,6 +107,7 @@ export function DealsHeader() {
          <span className="text-[#FAFAFA]"> New Deal</span> 
         </Button>
       </div>
+      {showFilter && <Filter filters={filters} handleToggle={handleToggle} showFilter={showFilter} setShowFilter={() => setShowFilter((prev: boolean) => !prev)} searchableCategories={searchableCategories} setSearchQueries={setSearchQueries} searchQueries={searchQueries} classes="w-[300px] bg-white" />}
     </div>
   )
 }

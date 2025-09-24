@@ -1,7 +1,9 @@
 'use client'
 
 import { FilterData } from "@/feature/deals/libs/filterData"
+import { X } from "lucide-react";
 import { useState } from "react";
+import { Button } from "../ui/Button";
 
 type filterProps = {
     showFilter: boolean;
@@ -16,12 +18,18 @@ type filterProps = {
 
 export default function Filter({ filters, handleToggle, setShowFilter, showFilter, classes, searchableCategories, searchQueries, setSearchQueries }: filterProps) {
     return (
-        <div className="w-full h-full bg-black/50 fixed top-0 left-0 z-50">
+        <div className="w-full h-full bg-black/50 fixed top-0 left-0 z-50" aria-hidden={!showFilter}
+            onClick={(e) => {
+                // Close when clicking the backdrop only
+                if ((e.target as HTMLElement).id === "filter-backdrop") setShowFilter()
+            }}
+            id="filter-backdrop"
+            style={{ visibility: showFilter ? "visible" : "hidden" }}>
             <div className={`fixed top-0 right-0 h-full bg-red bg-opacity-50 z-50 ${classes}`}>
                 <div className="flex flex-col h-full overflow-hidden overflow-y-auto">
                     <div className="flex justify-between h-min items-start w-full p-3 border-b-2">
                         <h2 className="text-lg font-semibold">Filter</h2>
-                        <button onClick={setShowFilter} className="cursor-pointer">X</button>
+                        <button onClick={setShowFilter} className="cursor-pointer"><X className="size-4" /></button>
                     </div>
                     <div className="p-4">
                         <aside className="w-64 p-4">

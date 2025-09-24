@@ -5,6 +5,7 @@ import { Search, LayoutGrid, List, Download, Upload, Plus } from "lucide-react"
 import { useState } from "react"
 import Filter from "@/components/filter"
 import { filterData, type FilterData } from "@/feature/deals/libs/filterData"
+import DealModal from "./DealModal"
 
 
 const userOptions = [{ value: "Closed", label: "Closed Time" }]
@@ -19,6 +20,7 @@ export function DealsHeader({ view, setView }: DealsHeaderProps) {
   const [showFilter, setShowFilter] = useState(false)
   const [filters, setFilters] = useState(filterData);
   const [searchQueries, setSearchQueries] = useState<Record<string, string>>({});
+  const [showNewDealer, setShowNewDealer] = useState<boolean>(false);
 
   // ✅ Toggle checkbox
   const handleToggle = (category: keyof FilterData, id: string) => {
@@ -107,11 +109,12 @@ export function DealsHeader({ view, setView }: DealsHeaderProps) {
         </Button>
 
         {/* New Deal */}
-        <Button className="whitespace-nowrap bg-black">
+        <Button className="whitespace-nowrap bg-black" onClick={() => setShowNewDealer(true)}>
           <Plus className="text-[#FAFAFA] h-4 w-4 " />
          <span className="text-[#FAFAFA]"> New Deal</span> 
         </Button>
       </div>
+      <DealModal open={showNewDealer} onClose={() => setShowNewDealer(false)} />
       {showFilter && <Filter filters={filters} handleToggle={handleToggle} showFilter={showFilter} setShowFilter={() => setShowFilter((prev: boolean) => !prev)} searchableCategories={searchableCategories} setSearchQueries={setSearchQueries} searchQueries={searchQueries} classes="w-[300px] bg-white" />}
     </div>
   )

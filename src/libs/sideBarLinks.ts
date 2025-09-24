@@ -38,11 +38,11 @@ export const sidebarItems: SidebarLink[] = [
     children: [
       { 
         label: "Customers",
-        // route: "/contact/customers"
+        route: "/contact/customers"
        },
       { 
         label: "Companies", 
-        // route: "/contact/companies"
+        route: "/contact/companies"
        },
     ],
   },

@@ -30,20 +30,20 @@ export const sidebarItems: SidebarLink[] = [
   {
     label: "Prospects",
     icon: "/sideBarIcons/trending-up.svg",
-    // route: "/prospects"
-  },
+    route: "/prospects"
+   },
   {
     label: "Contact",
     icon: "/sideBarIcons/mail.svg",
     children: [
       {
         label: "Customers",
-        // route: "/contact/customers"
-      },
-      {
-        label: "Companies",
-        // route: "/contact/companies"
-      },
+        route: "/contact/customers"
+       },
+      { 
+        label: "Companies", 
+        route: "/contact/companies"
+       },
     ],
   },
   {

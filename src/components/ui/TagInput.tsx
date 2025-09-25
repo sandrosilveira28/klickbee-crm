@@ -33,7 +33,7 @@ const TagInput = ({name, values, setValue, input, setInput}: tagInputProps) => {
     return (
         <div className="space-y-1.5">
             <label className="text-sm font-medium">{name}</label>
-            <div className="flex flex-wrap gap-2 rounded-md border border-dashed border-border p-2">
+            <div className="flex flex-wrap gap-2 p-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-gray-400 focus:outline-none">
                 {values?.map((t, idx) => (
                     <span
                         key={`${t}-${idx}`}
@@ -60,7 +60,7 @@ const TagInput = ({name, values, setValue, input, setInput}: tagInputProps) => {
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={(e) => handleTagKeyDown(e, values)}
                     placeholder={`Add ${name}`}
-                    className="flex-1 min-w-24 px-2 py-1 outline-none bg-transparent"
+                    className="flex-1 min-w-24 px-2 py-1 outline-none"
                 />
             </div>
         </div>

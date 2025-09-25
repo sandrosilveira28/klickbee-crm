@@ -10,6 +10,9 @@ import { Trash2, UploadCloud } from "lucide-react"
 import SearchableDropdown from "@/components/ui/SearchableDropdown"
 import { companyOptions, contactOptions } from "../libs/companyData"
 import TagInput from "@/components/ui/TagInput"
+import UploadButton from "@/components/ui/UploadButton"
+import { options } from '../libs/currencyOptions'
+import InputWithDropDown from "@/components/ui/InputWithDropDown"
 
 type DealFormValues = {
     dealName: string
@@ -88,7 +91,7 @@ export default function DealForm({
                                 id="dealName"
                                 name="dealName"
                                 placeholder="Add a name"
-                                className="w-full rounded-md border border-input bg-background px-3 py-2 outline-none focus:ring-2 focus:ring-ring"
+                                className="w-full rounded-md border border-input bg-background px-3 py-2 outline-none focus:ring-1 focus:ring-gray-400 focus:outline-none"
                             />
                         </FieldBlock>
 
@@ -119,7 +122,7 @@ export default function DealForm({
                                     as="select"
                                     id="stage"
                                     name="stage"
-                                    className="w-full rounded-md border border-input bg-background px-3 py-2 outline-none focus:ring-2 focus:ring-ring"
+                                    className="w-full rounded-md border border-input bg-background px-3 py-2 outline-none focus:ring-1 focus:ring-gray-400 focus:outline-none"
                                 >
                                     <option value="New">New</option>
                                     <option value="Qualified">Qualified</option>
@@ -130,35 +133,8 @@ export default function DealForm({
                             </FieldBlock>
 
                             <FieldBlock name="amount" label="Amount">
-                                <div className="flex rounded-md border border-input bg-background focus-within:ring-2 focus-within:ring-ring">
-                                    {/* Amount Input */}
-                                    <Field
-                                        id="amount"
-                                        name="amount"
-                                        type="number"
-                                        step="0.01"
-                                        min="0"
-                                        className="flex-1 rounded-l-md px-3 py-2 outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [appearance:textfield] w-1/4"
-                                    />
-
-                                    {/* Currency Select */}
-                                    <div className="flex items-center gap-1 px-2 border-l">
-                                        <Field
-                                            as="select"
-                                            id="currency"
-                                            name="currency"
-                                            className="rounded-md bg-transparent outline-none pr-2"
-                                        >
-                                            <option value="EUR">€</option>
-                                            <option value="USD">$</option>
-                                            <option value="GBP">£</option>
-                                        </Field>
-                                    </div>
-                                </div>
-
-                                <Error name="amount" />
+                                <InputWithDropDown inputName='amount' optionName="currency" options={options} />
                             </FieldBlock>
-
                         </div>
 
                         <FieldBlock name="owner" label="Owner">
@@ -166,7 +142,7 @@ export default function DealForm({
                                 as="select"
                                 id="owner"
                                 name="owner"
-                                className="w-full rounded-md border border-input bg-background px-3 py-2 outline-none focus:ring-2 focus:ring-ring"
+                                className="w-full rounded-md border border-input bg-background px-3 py-2 outline-none focus:ring-1 focus:ring-gray-400 focus:outline-none"
                             >
                                 <option>Claire Brunet</option>
                                 <option>Alex Kim</option>
@@ -179,7 +155,7 @@ export default function DealForm({
                                 id="closeDate"
                                 name="closeDate"
                                 type="date"
-                                className="w-full rounded-md border border-input bg-background px-3 py-2 outline-none focus:ring-2 focus:ring-ring"
+                                className="w-full rounded-md border border-input bg-background px-3 py-2 outline-none focus:ring-1 focus:ring-gray-400 focus:outline-none"
                             />
                         </FieldBlock>
 
@@ -192,55 +168,10 @@ export default function DealForm({
                                 name="notes"
                                 rows={4}
                                 placeholder="Add any internal notes or context..."
-                                className="w-full resize-y rounded-md border border-input bg-background px-3 py-2 outline-none focus:ring-2 focus:ring-ring"
+                                className="w-full resize-y rounded-md border border-input bg-background px-3 py-2 outline-none focus:ring-1 focus:ring-gray-400 focus:outline-none"
                             />
                         </FieldBlock>
-
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium">Attached Files</label>
-                            <div className="rounded-md border border-dashed border-border p-4">
-                                <label className="flex cursor-pointer items-center gap-3">
-                                    <UploadCloud className="size-5 text-muted-foreground" />
-                                    <span className="text-sm text-muted-foreground">
-                                        Choose a file or drag & drop it here. PDF/JPG/PNG max 10 MB.
-                                    </span>
-                                    <input
-                                        type="file"
-                                        className="sr-only"
-                                        multiple
-                                        onChange={(e) => {
-                                            const files = Array.from(e.currentTarget.files ?? [])
-                                            console.log("Selected files:", files)
-                                            setFieldValue("files", [...values.files, ...files])
-                                        }}
-                                    />
-                                </label>
-                            </div>
-
-                            <ul className="space-y-2">
-                                {values.files.map((f, i) => (
-                                    <li
-                                        key={`${f.name}-${i}`}
-                                        className="flex items-center justify-between rounded-md border border-border px-3 py-2"
-                                    >
-                                        <span className="text-sm truncate">{f.name}</span>
-                                        <Button
-                                            type="button"
-                                            className="text-red-500 cursor-pointer"
-                                            onClick={() => {
-                                                const next = [...values.files]
-                                                next.splice(i, 1)
-                                                console.log("Remaining files:", next)
-                                                setFieldValue("files", next)
-                                            }}
-                                        >
-                                            <Trash2 className="mr-1 size-4" />
-                                            Delete
-                                        </Button>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
+                        <UploadButton values={values.files} setValue={(values) => setFieldValue('files', values)} />
                     </div>
 
                     {/* Footer: sticky to panel bottom */}

@@ -4,11 +4,10 @@ import TextInput from "@/components/ui/TextInput";
 import SelectInput from "@/components/ui/SelectInput";
 import TextareaInput from "@/components/ui/TextareaInput";
 import CheckboxInput from "@/components/ui/CheckboxInput";
-import { Trash2, UploadCloud } from "lucide-react";
-import { Button } from "@/components/ui/Button";
 import { Meeting } from "../types/meeting";
 import TagInput from "@/components/ui/TagInput";
 import { useState } from "react";
+import UploadButton from "@/components/ui/UploadButton";
 
 // ✅ Yup validation
 const MeetingSchema = Yup.object().shape({
@@ -30,6 +29,7 @@ const initialValues: Meeting = {
   repeatMeeting: false,
   frequency: "Daily",
   repeatOn: "",
+  repeatEvery: 0,
   ends: "Never",
   linkedTo: "",
   location: "",
@@ -48,6 +48,17 @@ type formProps = {
 export default function MeetingForm({ onSubmit, onClose }: formProps) {
   const [tagInput, setTagInput] = useState("")
   const [participantsInput, setParticipantsInput] = useState("")
+
+  const renderDuration = (frequency: string | undefined) => {
+    if(!frequency) return;
+    switch(frequency){
+      case 'Daily': return 'Day (s)';
+      case 'Weekly': return 'Weeks (s)';
+      case 'Monthly': return 'Month (s)';
+      case 'Yearly': return 'Year (s)';
+      default: return 'Day (s)';
+    }
+  }
   return (
     <Formik<Meeting>
       initialValues={initialValues}
@@ -72,19 +83,32 @@ export default function MeetingForm({ onSubmit, onClose }: formProps) {
           <div>
             <CheckboxInput name="repeatMeeting" label="Repeat this meeting" />
             {values.repeatMeeting && (
-              <div className="grid grid-cols-3 gap-4 mt-2">
-                <SelectInput label="Frequency" name="frequency">
-                  <option value="Daily">Daily</option>
-                  <option value="Weekly">Weekly</option>
-                  <option value="Monthly">Monthly</option>
-                  <option value="Yearly">Yearly</option>
-                </SelectInput>
-                <TextInput label="Repeat On" name="repeatOn" placeholder="e.g. Monday" />
-                <SelectInput label="Ends" name="ends">
-                  <option value="Never">Never</option>
-                  <option value="After">After</option>
-                  <option value="OnDate">On Date</option>
-                </SelectInput>
+              <div>
+                <div className="grid grid-cols-2 gap-4 mt-2">
+                  <SelectInput label="Frequency" name="frequency">
+                    <option value="Daily">Daily</option>
+                    <option value="Weekly">Weekly</option>
+                    <option value="Monthly">Monthly</option>
+                    <option value="Yearly">Yearly</option>
+                  </SelectInput>
+                  <div>
+                    <label htmlFor="repeatEvery">Repeat Every</label>
+                    <div className="flex rounded-md border focus-within:ring-1">
+                      <input type="number" id="repeatEvery" value={values.repeatEvery} name="repeatEvery" min={0} onChange={(e) => setFieldValue('repeatEvery', e.target.value)} className="flex-1 rounded-l-md px-3 py-2 outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [appearance:textfield] w-1/4" />
+                      <div className="flex items-center gap-1 border-l px-1 text-gray-400 font-light text-sm">
+                        {renderDuration(values?.frequency)}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4 mt-2">
+                  <TextInput label="Repeat On" name="repeatOn" placeholder="e.g. Monday" />
+                  <SelectInput label="Ends" name="ends">
+                    <option value="Never">Never</option>
+                    <option value="After">After</option>
+                    <option value="OnDate">On Date</option>
+                  </SelectInput>
+                </div>
               </div>
             )}
           </div>
@@ -99,7 +123,7 @@ export default function MeetingForm({ onSubmit, onClose }: formProps) {
           <TextInput label="Assigned To" name="assignedTo" placeholder="Team member" />
 
           {/* Participants */}
-          <TagInput name='Participants' values={values.participants} setValue={(values: string[]) => setFieldValue('participants', values)} input={participantsInput} setInput={(value: string) => setParticipantsInput(value)}/>
+          <TagInput name='Participants' values={values.participants} setValue={(values: string[]) => setFieldValue('participants', values)} input={participantsInput} setInput={(value: string) => setParticipantsInput(value)} />
 
           {/* Status */}
           <SelectInput label="Status" name="status">
@@ -115,52 +139,7 @@ export default function MeetingForm({ onSubmit, onClose }: formProps) {
           {/* Notes */}
           <TextareaInput label="Notes" name="notes" rows={4} placeholder="Additional notes..." />
 
-          
-          {/* <div className="space-y-2">
-            <label className="text-sm font-medium">Attached Files</label>
-            <div className="rounded-md border border-dashed border-border p-4">
-              <label className="flex cursor-pointer items-center gap-3">
-                <UploadCloud className="size-5 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">
-                  Choose a file or drag & drop it here. PDF/JPG/PNG max 10 MB.
-                </span>
-                <input
-                  type="file"
-                  className="sr-only"
-                  multiple
-                  onChange={(e) => {
-                    const files = Array.from(e.currentTarget.files ?? [])
-                    console.log("Selected files:", files)
-                    setFieldValue("files", [...values.files, ...files])
-                  }}
-                />
-              </label>
-            </div>
-
-            <ul className="space-y-2">
-              {values?.files.map((f, i) => (
-                <li
-                  key={`${f.name}-${i}`}
-                  className="flex items-center justify-between rounded-md border border-border px-3 py-2"
-                >
-                  <span className="text-sm truncate">{f.name}</span>
-                  <Button
-                    type="button"
-                    className="text-red-500 cursor-pointer"
-                    onClick={() => {
-                      const next = [...values.files]
-                      next.splice(i, 1)
-                      console.log("Remaining files:", next)
-                      setFieldValue("files", next)
-                    }}
-                  >
-                    <Trash2 className="mr-1 size-4" />
-                    Delete
-                  </Button>
-                </li>
-              ))}
-            </ul>
-          </div> */}
+          <UploadButton values={values.files} setValue={(values) => setFieldValue('files', values)} />
 
           {/* Actions */}
           <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">

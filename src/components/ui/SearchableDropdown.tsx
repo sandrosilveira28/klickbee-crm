@@ -46,8 +46,7 @@ export default function SearchableDropdown({
             onChange(e.target.value); // notify Formik
           }}
           onFocus={() => setIsOpen(true)}
-          onBlur={() => setTimeout(() => setIsOpen(false), 150)}
-          className={`w-full rounded-md border border-input bg-background ${showIcon ? 'pl-10' : 'pl-3'} pr-3 py-2 outline-none focus:ring-2 focus:ring-ring`}
+          className={`w-full rounded-md border border-input bg-background ${showIcon ? 'pl-10' : 'pl-3'} pr-3 py-2 outline-none focus:ring-1 focus:ring-gray-400 focus:outline-none`}
         />
       </div>
 
@@ -60,6 +59,7 @@ export default function SearchableDropdown({
                 key={option.id}
                 className="px-3 py-2 cursor-pointer hover:bg-gray-100"
                 onClick={() => {
+                  console.log('clicked on it')
                   onChange(option.label); // set Formik value
                   setQuery(option.label);
                   setIsOpen(false);

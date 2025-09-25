@@ -1,7 +1,23 @@
-'use client'
-import React, { useState } from 'react';
-import { X, Calendar, Clock, MapPin, Users, Link, FileText, Edit, Trash2, Download, Video } from 'lucide-react';
-import { MeetingStatus, Meeting } from '../types/meeting';
+'use client';
+import React from 'react';
+import {
+  X,
+  MapPin,
+  Video,
+  Tag,
+  Link as LinkIcon,
+  User,
+  Repeat,
+  Download,
+  Delete,
+  Trash2,
+  NotebookPenIcon,
+  Edit,
+  Calendar,
+  CalendarClock,
+} from 'lucide-react';
+import Modal from '@/components/ui/Modal';
+import { Meeting, MeetingStatus } from '../types/meeting';
 
 interface MeetingDetailModalProps {
   isOpen: boolean;
@@ -9,6 +25,8 @@ interface MeetingDetailModalProps {
   onClose: () => void;
   onUpdate: (id: string, updates: Partial<Meeting>) => void;
   onDelete: (id: string) => void;
+  onReschedule?: (id: string) => void;
+  onEdit?: (id: string) => void; // new: open edit form
 }
 
 export const MeetingDetailModal: React.FC<MeetingDetailModalProps> = ({
@@ -17,65 +35,48 @@ export const MeetingDetailModal: React.FC<MeetingDetailModalProps> = ({
   onClose,
   onUpdate,
   onDelete,
+  onReschedule,
+  onEdit,
 }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [editData, setEditData] = useState(meeting || {} as Meeting);
-
   if (!isOpen || !meeting) return null;
 
-  const formatDateTime = (date: Date) => {
-    return date.toLocaleString('en-US', {
+  const formatDateTime = (date: Date) =>
+    new Date(date).toLocaleString('en-US', {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
       day: 'numeric',
       hour: 'numeric',
       minute: '2-digit',
-      hour12: true
+      hour12: true,
     });
-  };
 
-  const handleEdit = () => {
-    setEditData(meeting);
-    setIsEditing(true);
-  };
-
-  const handleSave = () => {
-    onUpdate(meeting.id, editData);
-    setIsEditing(false);
-  };
-
-  const handleCancel = () => {
-    setEditData(meeting);
-    setIsEditing(false);
-  };
-
-  const handleDelete = () => {
-    if (window.confirm('Are you sure you want to delete this meeting?')) {
-      onDelete(meeting.id);
-      onClose();
-    }
-  };
-
-  const getStatusBadge = () => {
+  const getStatusBadge = (status?: MeetingStatus) => {
     const statusColors: Record<MeetingStatus, string> = {
       scheduled: 'bg-blue-100 text-blue-800',
       completed: 'bg-green-100 text-green-800',
       cancelled: 'bg-red-100 text-red-800',
     };
-    
     return (
-      <span className={`px-2 py-1 text-xs font-medium rounded-full ${statusColors[meeting.status || 'scheduled']}`}>
-        {(meeting.status || 'scheduled').charAt(0).toUpperCase() + (meeting.status || 'scheduled').slice(1)}
+      <span
+        className={`px-2 py-1 text-xs font-medium rounded-full ${
+          statusColors[status || 'scheduled']
+        }`}
+      >
+        {(status || 'scheduled').charAt(0).toUpperCase() +
+          (status || 'scheduled').slice(1)}
       </span>
     );
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-end z-50">
-      <div className="bg-white h-full w-96 shadow-lg overflow-y-auto">
+    <Modal open={isOpen} onClose={onClose}>
+      <div className="bg-white w-[400px] fixed right-0 top-0 h-full shadow-lg overflow-y-auto ">
+        {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-900">Meeting Details</h2>
+          <h2 className="text-lg font-semibold text-gray-900">
+            {meeting.title}
+          </h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -83,160 +84,206 @@ export const MeetingDetailModal: React.FC<MeetingDetailModalProps> = ({
             <X className="w-6 h-6" />
           </button>
         </div>
-        
-        <div className="p-6 space-y-6">
-          {/* Status and Actions */}
-          <div className="flex items-center justify-between">
-            {getStatusBadge()}
-            <div className="flex items-center space-x-2">
-              <button
-                onClick={handleEdit}
-                className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                title="Edit Meeting"
-              >
-                <Edit className="w-4 h-4" />
-              </button>
-              <button
-                onClick={handleDelete}
-                className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                title="Delete Meeting"
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
 
-          {/* Meeting Title */}
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              {meeting.title}
-            </h3>
-            {meeting.description && (
-              <p className="text-gray-600">{meeting.description}</p>
-            )}
-          </div>
-
-          {/* Date and Time */}
-          <div className="flex items-start space-x-3">
-            <Calendar className="w-5 h-5 text-gray-400 mt-0.5" />
-            <div>
-              <div className="font-medium text-gray-900">
-                {formatDateTime(meeting.startTime)}
+        <div className="p-6 space-y-8">
+          {/* Overview */}
+          <section>
+            <h3 className="font-medium text-gray-900 mb-4">Meeting Overview</h3>
+            <div className="space-y-3 text-sm text-gray-700">
+              <div className="flex items-center">
+                <span className="w-28 font-medium">Status</span>:
+                <span className="ml-2">{getStatusBadge(meeting.status)}</span>
               </div>
-              <div className="text-sm text-gray-600">
-                to {meeting.endTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}
+              <div className="flex items-center">
+                <span className="w-28 font-medium">Date &amp; Time</span>:
+                <span className="ml-2">
+                  {formatDateTime(meeting.startTime)} –{' '}
+                  {new Date(meeting.endTime).toLocaleTimeString('en-US', {
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true,
+                  })}
+                </span>
               </div>
-            </div>
-          </div>
-
-          {/* Location */}
-          {meeting.location && (
-            <div className="flex items-center space-x-3">
-              <MapPin className="w-5 h-5 text-gray-400" />
-              <span className="text-gray-900">{meeting.location}</span>
-            </div>
-          )}
-
-          {/* Participants */}
-          <div className="flex items-start space-x-3">
-            <Users className="w-5 h-5 text-gray-400 mt-0.5" />
-            <div>
-              <div className="font-medium text-gray-900 mb-1">Participants</div>
-              <div className="space-y-1">
-                {meeting.participants.map((participant: string, index: number) => (
-                  <div key={index} className="text-sm text-gray-600">
-                    {participant}
+              {meeting.assignedTo && (
+                <div className="flex items-center">
+                  <span className="w-28 font-medium">Assigned To</span>:
+                  <span className="ml-2 flex items-center">
+                    <User className="w-4 h-4 mr-1 text-gray-400" />
+                    {meeting.assignedTo}
+                  </span>
+                </div>
+              )}
+              {meeting?.participants && meeting.participants?.length > 0 && (
+                <div className="flex items-start">
+                  <span className="w-28 font-medium">Participants</span>:
+                  <div className="ml-2">{meeting.participants.join(', ')}</div>
+                </div>
+              )}
+              {meeting.location && (
+                <div className="flex items-center">
+                  <span className="w-28 font-medium">Location</span>:
+                  <span className="ml-2 flex items-center">
+                    <MapPin className="w-4 h-4 mr-1 text-gray-400" />
+                    {meeting.location}
+                  </span>
+                </div>
+              )}
+              {meeting.meetingLink && (
+                <div className="flex items-center">
+                  <span className="w-28 font-medium">Link</span>:
+                  <a
+                    href={meeting.meetingLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ml-2 text-blue-600 hover:underline flex items-center"
+                  >
+                    <Video className="w-4 h-4 mr-1" />
+                    {meeting.meetingLink}
+                  </a>
+                </div>
+              )}
+              {meeting.linkedTo && (
+                <div className="flex items-center">
+                  <span className="w-28 font-medium">Linked To</span>:
+                  <span className="ml-2 flex items-center">
+                    <LinkIcon className="w-4 h-4 mr-1 text-gray-400" />
+                    {meeting.linkedTo}
+                  </span>
+                </div>
+              )}
+              {meeting?.tags && meeting.tags?.length > 0 && (
+                <div className="flex items-center">
+                  <span className="w-28 font-medium">Tags</span>:
+                  <div className="ml-2 flex gap-2 flex-wrap">
+                    {meeting.tags.map((tag, idx) => (
+                      <span
+                        key={idx}
+                        className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full text-xs flex items-center"
+                      >
+                        <Tag className="w-3 h-3 mr-1" />
+                        {tag}
+                      </span>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </div>
+              )}
+              {meeting.repeatFrequency && meeting.repeatFrequency !== 'none' && (
+                <div className="flex items-center">
+                  <span className="w-28 font-medium">Recurs</span>:
+                  <span className="ml-2 flex items-center">
+                    <Repeat className="w-4 h-4 mr-1 text-gray-400" />
+                    Every {meeting.repeatEvery || 1}{' '}
+                    {meeting.repeatFrequency}
+                    {meeting.repeatOn && ` on ${meeting.repeatOn}`}
+                  </span>
+                </div>
+              )}
+              {meeting.ends && (
+                <div className="flex items-center">
+                  <span className="w-28 font-medium">Ends</span>:
+                  <span className="ml-2">{meeting.ends}</span>
+                </div>
+              )}
             </div>
-          </div>
+          </section>
 
-          {/* Meeting Link */}
-          {meeting.meetingLink && (
-            <div className="flex items-center space-x-3">
-              <Video className="w-5 h-5 text-gray-400" />
-              <a 
-                href={meeting.meetingLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 hover:text-blue-800 hover:underline"
-              >
-                Join Meeting
-              </a>
-            </div>
+          {/* Description */}
+          {meeting.description && (
+            <section>
+              <h3 className="font-medium text-gray-900 mb-2">Description</h3>
+              <p className="text-sm text-gray-700 whitespace-pre-wrap">
+                {meeting.description}
+              </p>
+            </section>
           )}
 
           {/* Notes */}
           {meeting.notes && (
-            <div className="flex items-start space-x-3">
-              <FileText className="w-5 h-5 text-gray-400 mt-0.5" />
-              <div>
-                <div className="font-medium text-gray-900 mb-1">Notes</div>
-                <div className="text-sm text-gray-600 whitespace-pre-wrap">
-                  {meeting.notes}
-                </div>
-              </div>
-            </div>
+            <section>
+              <h3 className="font-medium text-gray-900 mb-2">Notes</h3>
+              <p className="text-sm text-gray-700 whitespace-pre-wrap">
+                {meeting.notes}
+              </p>
+            </section>
           )}
 
           {/* Attached Files */}
-          {meeting.attachedFiles && meeting.attachedFiles.length > 0 && (
-            <div className="flex items-start space-x-3">
-              <FileText className="w-5 h-5 text-gray-400 mt-0.5" />
-              <div>
-                <div className="font-medium text-gray-900 mb-2">Attached Files</div>
-                <div className="space-y-2">
-                  {meeting.attachedFiles.map((file: any, index: number) => (
-                    <div key={index} className="flex items-center space-x-2 text-sm">
-                      <Download className="w-4 h-4 text-gray-400" />
-                      <span className="text-blue-600 hover:text-blue-800 cursor-pointer">
-                        {file}
-                      </span>
-                    </div>
-                  ))}
-                </div>
+          {meeting?.attachedFiles && meeting.attachedFiles?.length > 0 && (
+            <section>
+              <h3 className="font-medium text-gray-900 mb-2">Attached Files</h3>
+              <div className="space-y-2">
+                {meeting.attachedFiles.map((file, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-md"
+                  >
+                    <span className="text-sm text-blue-600">{file}</span>
+                    <button className="flex items-center text-gray-600 hover:text-gray-800">
+                      <Download className="w-4 h-4 mr-1" />
+                      Download
+                    </button>
+                  </div>
+                ))}
               </div>
-            </div>
+            </section>
           )}
 
           {/* Activity Log */}
-          <div className="border-t border-gray-200 pt-6">
-            <h4 className="font-medium text-gray-900 mb-3">Activity Log</h4>
-            <div className="space-y-3">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                  <Calendar className="w-4 h-4 text-blue-600" />
-                </div>
-                <div className="flex-1">
-                  <div className="text-sm text-gray-900">Created by Thomas Schmidt</div>
-                  <div className="text-xs text-gray-500">Mar 28, 2025</div>
-                </div>
+          {(meeting as any).activityLog?.length > 0 && (
+            <section>
+              <h3 className="font-medium text-gray-900 mb-2">Activity Log</h3>
+              <div className="space-y-3 text-sm">
+                {(meeting as any).activityLog.map(
+                  (
+                    log: { action: string; user: string; timestamp: Date },
+                    idx: number
+                  ) => (
+                    <div key={idx} className="flex items-start">
+                      <div className="flex-1">
+                        <div className="text-gray-900">
+                          {log.action} by {log.user}
+                        </div>
+                        <div className="text-xs text-gray-500">
+                          {new Date(log.timestamp).toLocaleString()}
+                        </div>
+                      </div>
+                    </div>
+                  )
+                )}
               </div>
-              
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                  <Edit className="w-4 h-4 text-green-600" />
-                </div>
-                <div className="flex-1">
-                  <div className="text-sm text-gray-900">Last modified by Claire Bryant</div>
-                  <div className="text-xs text-gray-500">Mar 29, 2025</div>
-                </div>
-              </div>
-              
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
-                  <Users className="w-4 h-4 text-yellow-600" />
-                </div>
-                <div className="flex-1">
-                  <div className="text-sm text-gray-900">Invite pending to ConfSweet</div>
-                  <div className="text-xs text-gray-500">Just now</div>
-                </div>
-              </div>
-            </div>
+            </section>
+          )}
+        </div>
+
+        {/* Footer Actions */}
+        <div className="flex justify-between gap-3 border-t border-gray-200 px-6 py-4">
+          <div>
+            <button
+              onClick={() => onDelete(meeting.id!)}
+              className="p-2 text-sm font-medium rounded-lg text-red-500 border border-red-500"
+            >
+              <Trash2 className='h-4 w-4'/>
+            </button>
+          </div>
+          <div className='flex gap-4'>
+            <button
+              onClick={() => onEdit?.(meeting.id!)}
+              className="flex justify-center items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-50"
+            >
+              <Edit className='h-4 w-4' />
+              Edit Meeting
+            </button>
+            <button
+              onClick={() => onReschedule?.(meeting.id!)}
+              className="flex justify-center items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-50"
+            >
+              <CalendarClock className='h-4 w-4'/>
+              Reschedule
+            </button>
           </div>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };

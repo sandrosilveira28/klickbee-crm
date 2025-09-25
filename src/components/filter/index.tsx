@@ -2,8 +2,7 @@
 
 import { FilterData } from "@/feature/deals/libs/filterData"
 import { X } from "lucide-react";
-import { useState } from "react";
-import { Button } from "../ui/Button";
+import Modal from "../ui/Modal";
 
 type filterProps = {
     showFilter: boolean;
@@ -18,13 +17,7 @@ type filterProps = {
 
 export default function Filter({ filters, handleToggle, setShowFilter, showFilter, classes, searchableCategories, searchQueries, setSearchQueries }: filterProps) {
     return (
-        <div className="w-full h-full bg-black/50 fixed top-0 left-0 z-50" aria-hidden={!showFilter}
-            onClick={(e) => {
-                // Close when clicking the backdrop only
-                if ((e.target as HTMLElement).id === "filter-backdrop") setShowFilter()
-            }}
-            id="filter-backdrop"
-            style={{ visibility: showFilter ? "visible" : "hidden" }}>
+        <Modal open={showFilter} onClose={setShowFilter}>
             <div className={`fixed top-0 right-0 h-full bg-red bg-opacity-50 z-50 ${classes}`}>
                 <div className="flex flex-col h-full overflow-hidden overflow-y-auto">
                     <div className="flex justify-between h-min items-start w-full p-3 border-b-2">
@@ -77,6 +70,6 @@ export default function Filter({ filters, handleToggle, setShowFilter, showFilte
                     </div>
                 </div>
             </div>
-        </div>
+        </Modal>
     )
 }

@@ -20,6 +20,7 @@ export interface Meeting {
   ends?: 'Never' | 'After' | 'OnDate';
   linkedTo?: string;
   assignedTo?: string;
+  repeatEvery?: number;
 
 }
 

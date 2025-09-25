@@ -30,7 +30,7 @@ export const sidebarItems: SidebarLink[] = [
   { 
     label: "Prospects", 
     icon: "/sideBarIcons/trending-up.svg",
-    // route: "/prospects"
+    route: "/prospects"
    },
   {
     label: "Contact",
@@ -38,11 +38,11 @@ export const sidebarItems: SidebarLink[] = [
     children: [
       { 
         label: "Customers",
-        // route: "/contact/customers"
+        route: "/contact/customers"
        },
       { 
         label: "Companies", 
-        // route: "/contact/companies"
+        route: "/contact/companies"
        },
     ],
   },

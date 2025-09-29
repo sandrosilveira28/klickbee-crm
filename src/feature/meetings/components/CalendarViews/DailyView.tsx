@@ -27,9 +27,9 @@ export const DailyView: React.FC<DailyViewProps> = ({
   return (
     <div className="flex">
       {/* Time column */}
-      <div className="w-20 pr-4">
+      <div className="w-20  border-r border-[var(--border-gray)] py-[32px]">
         {hours.map(hour => (
-          <div key={hour} className="h-16 flex items-start justify-end text-sm text-gray-500 border-b border-gray-100">
+          <div key={hour} className="h-16 flex items-center justify-center text-xs font-Medium leading-4 ">
             {hour === 0 ? '12 AM' : hour < 12 ? `${hour} AM` : hour === 12 ? '12 PM' : `${hour - 12} PM`}
           </div>
         ))}

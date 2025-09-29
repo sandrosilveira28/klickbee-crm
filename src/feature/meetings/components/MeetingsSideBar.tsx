@@ -44,7 +44,7 @@ export const MeetingsSidebar: React.FC<MeetingsSidebarProps> = ({
     const weekdays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 
     return (
-      <div className="bg-white rounded-lg border border-gray-200 p-4">
+      <div className="bg-white border-b border-[var(--border-gray)] p-4">
         {/* Month header */}
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-medium text-gray-900">
@@ -152,13 +152,13 @@ export const MeetingsSidebar: React.FC<MeetingsSidebarProps> = ({
   const selectedDateMeetings = getSelectedDateMeetings();
 
   return (
-    <div className="w-full bg-gray-50 border-r border-gray-200 space-y-6">
+    <div className="w-full ">
       {/* Mini Calendar */}
       {renderMiniCalendar()}
 
       {/* All Meetings List */}
-      <div className="bg-white rounded-lg border border-gray-200 p-1">
-        <h3 className="font-medium text-gray-900 mb-4">All Meetings</h3>
+      <div className="bg-white rounded-lg p-3">
+        <h3 className="font-medium text-gray-900 mb-4 p-2">All Meetings</h3>
         
         {selectedDateMeetings.length === 0 ? (
           <div className="text-center py-8">
@@ -171,7 +171,7 @@ export const MeetingsSidebar: React.FC<MeetingsSidebarProps> = ({
               <div
                 key={meeting.id}
                 onClick={() => onMeetingClick(meeting)}
-                className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors border border-gray-100"
+                className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors border border-[var(--border-gray)]"
               >
                 <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${getMeetingStatusColor(meeting)}`}></div>
                 

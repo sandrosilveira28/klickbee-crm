@@ -8,6 +8,7 @@ import { Meeting } from "../types/meeting";
 import TagInput from "@/components/ui/TagInput";
 import { useState } from "react";
 import UploadButton from "@/components/ui/UploadButton";
+import { Button } from "@/components/ui/Button";
 
 // ✅ Yup validation
 const MeetingSchema = Yup.object().shape({
@@ -68,19 +69,22 @@ export default function MeetingForm({ onSubmit, onClose }: formProps) {
       }}
     >
       {({ values, setFieldValue }) => (
-        <Form className="space-y-6 p-6">
+        <Form className="flex flex-col gap-4 ">
           {/* Title */}
+          <div className="p-4">
+
           <TextInput label="Meeting Title" name="title" placeholder="e.g. Call with ADE Construction" />
+          </div>
 
           {/* Date & Time */}
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-3 gap-4 p-4">
             <TextInput label="Date" type="date" name="startDate" />
             <TextInput label="Start Time" type="time" name="startTime" />
             <TextInput label="End Time" type="time" name="endTime" />
           </div>
 
           {/* Repeat Meeting */}
-          <div>
+          <div className="p-4">
             <CheckboxInput name="repeatMeeting" label="Repeat this meeting" />
             {values.repeatMeeting && (
               <div>
@@ -93,7 +97,7 @@ export default function MeetingForm({ onSubmit, onClose }: formProps) {
                   </SelectInput>
                   <div>
                     <label htmlFor="repeatEvery">Repeat Every</label>
-                    <div className="flex rounded-md border focus-within:ring-1">
+                    <div className="flex rounded-md shadow-sm border border-[var(--border-gray)] focus-within:ring-1">
                       <input type="number" id="repeatEvery" value={values.repeatEvery} name="repeatEvery" min={0} onChange={(e) => setFieldValue('repeatEvery', e.target.value)} className="flex-1 rounded-l-md px-3 py-2 outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [appearance:textfield] w-1/4" />
                       <div className="flex items-center gap-1 border-l px-1 text-gray-400 font-light text-sm">
                         {renderDuration(values?.frequency)}
@@ -112,6 +116,7 @@ export default function MeetingForm({ onSubmit, onClose }: formProps) {
               </div>
             )}
           </div>
+<div className="p-4 flex flex-col gap-4">
 
           {/* Linked To */}
           <TextInput label="Linked To" name="linkedTo" placeholder="Deal, Company or Contact" />
@@ -140,13 +145,14 @@ export default function MeetingForm({ onSubmit, onClose }: formProps) {
           <TextareaInput label="Notes" name="notes" rows={4} placeholder="Additional notes..." />
 
           <UploadButton values={values.files} setValue={(values) => setFieldValue('files', values)} />
+</div>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
-            <button type="button" className="px-4 py-2 text-gray-600 hover:text-gray-800">Cancel</button>
-            <button type="submit" className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-              Save Meeting
-            </button>
+          <div className="flex items-center justify-center gap-4 p-4 border-t border-[var(--border-gray)]">
+            <Button type="button" className=" w-full">Cancel</Button>
+            <Button type="submit" className=" w-full bg-black text-white">
+              Save Task
+            </Button>
           </div>
         </Form>
       )}

@@ -1,4 +1,4 @@
-import { UploadCloud, Trash2} from 'lucide-react'
+import { UploadCloud, Trash2 } from 'lucide-react'
 import { Button } from './Button'
 
 type uploadProps = {
@@ -6,15 +6,18 @@ type uploadProps = {
     setValue: (value: File[]) => void
 }
 
-const UploadButton = ({values, setValue}: uploadProps) => {
+const UploadButton = ({ values, setValue }: uploadProps) => {
     return (
-        <div className="space-y-2">
+        <div className="flex flex-col gap-2">
             <label className="text-sm font-medium">Attached Files</label>
-            <div className="rounded-md border border-dashed border-border p-4">
-                <label className="flex cursor-pointer items-center gap-3">
-                    <UploadCloud className="size-5 text-muted-foreground" />
-                    <span className="text-sm text-muted-foreground">
-                        Choose a file or drag & drop it here. PDF/JPG/PNG max 10 MB.
+            <div className="  flex rounded-md justify-center items-center  px-14 py-8 shadow-sm border border-dashed border-[var(--border-gray)] ">
+                <label className=" flex cursor-pointer justify-center  items-center gap-4">
+                    <img src="\icons\Upload2.svg" className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm text-muted-foreground ">
+                        Choose a file or drag & drop it here.
+                        <span className='text-xs text-[var(--brand-gray)]'>
+                            PDF/JPG/PNG max 10 MB.
+                        </span>
                     </span>
                     <input
                         type="file"
@@ -23,9 +26,9 @@ const UploadButton = ({values, setValue}: uploadProps) => {
                         onChange={(e) => {
                             const files = Array.from(e.currentTarget.files ?? [])
                             console.log("Selected files:", files)
-                            if(values){
+                            if (values) {
                                 setValue([...values, ...files])
-                            }else{
+                            } else {
                                 setValue([...files])
                             }
                         }}

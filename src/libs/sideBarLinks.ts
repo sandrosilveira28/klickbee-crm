@@ -20,7 +20,6 @@ export const sidebarItems: SidebarLink[] = [
   {
     label: "To-Do",
     icon: "/sideBarIcons/layout-list.svg",
-<<<<<<< HEAD
    route: "/todo" 
     },
   { 
@@ -30,17 +29,6 @@ export const sidebarItems: SidebarLink[] = [
    },
   { 
     label: "Prospects", 
-=======
-    route: "/todo"
-  },
-  {
-    label: "Meetings",
-    icon: "/sideBarIcons/presentation.svg",
-    // route: "/meetings"
-  },
-  {
-    label: "Prospects",
->>>>>>> f93da08b6dc93343ef9c56a211bd6ef13d132608
     icon: "/sideBarIcons/trending-up.svg",
     route: "/prospects"
    },

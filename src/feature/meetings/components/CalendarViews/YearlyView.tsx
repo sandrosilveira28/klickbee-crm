@@ -41,12 +41,12 @@ export const YearlyView: React.FC<YearlyViewProps> = ({
     const monthMeetings = getMonthMeetings(month);
 
     return (
-      <div className="p-4 border border-gray-200 rounded-lg">
-        <h3 className="text-lg font-semibold text-center mb-3">
+      <div className="px-3 py-4 flex flex-col gap-4 border-r border-b border-[var(--border-gray)] ">
+        <h3 className="text-lg font-semibold text-center ">
           {month.toLocaleDateString('en-US', { month: 'long' })}
         </h3>
         
-        <div className="grid grid-cols-7 gap-1">
+        <div className="grid grid-cols-7">
           {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(day => (
             <div key={day} className="text-center text-xs font-medium text-gray-500 py-1">
               {day}
@@ -73,14 +73,14 @@ export const YearlyView: React.FC<YearlyViewProps> = ({
               >
                 {day.getDate()}
                 {dayMeetings.length > 0 && (
-                  <div className="w-1 h-1 bg-blue-600 rounded-full mx-auto mt-1"></div>
+                  <div className="w-1 h-1 bg-blue-600 rounded-full mx-auto "></div>
                 )}
               </div>
             );
           })}
         </div>
         
-        <div className="mt-3 text-center text-sm text-gray-600">
+        <div className=" text-center text-sm text-gray-600">
           {monthMeetings.length} meeting{monthMeetings.length !== 1 ? 's' : ''}
         </div>
       </div>
@@ -88,7 +88,7 @@ export const YearlyView: React.FC<YearlyViewProps> = ({
   };
 
   return (
-    <div className="grid grid-cols-3 gap-6 w-full">
+    <div className="grid grid-cols-3  w-full">
       {months.map(month => (
         <div key={month.getMonth()}>
           {renderMiniCalendar(month)}

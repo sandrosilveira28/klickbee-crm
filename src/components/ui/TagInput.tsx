@@ -31,9 +31,9 @@ const TagInput = ({name, values, setValue, input, setInput}: tagInputProps) => {
         }
 
     return (
-        <div className="space-y-1.5">
+        <div className="flex flex-col gap-2">
             <label className="text-sm font-medium">{name}</label>
-            <div className="flex flex-wrap gap-2 p-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-gray-400 focus:outline-none">
+            <div className="flex flex-wrap gap-2 p-2 shadow-sm border border-[var(--border-gray)] rounded-lg focus:ring-1 focus:ring-[var(--border-gray)] focus:outline-none">
                 {values?.map((t, idx) => (
                     <span
                         key={`${t}-${idx}`}

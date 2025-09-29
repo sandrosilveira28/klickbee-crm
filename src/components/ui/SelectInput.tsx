@@ -5,7 +5,7 @@ const SelectInput = ({ label, children, ...props }: { label: string; children: R
     <Field
       as="select"
       {...props}
-      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-gray-400 focus:outline-none"
+      className="w-full px-3 py-2 shadow-sm border border-[var(--border-gray)] rounded-lg focus:ring-1 focus:ring-gray-400 focus:outline-none"
     >
       {children}
     </Field>

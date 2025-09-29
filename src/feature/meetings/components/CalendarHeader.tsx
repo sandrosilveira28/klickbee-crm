@@ -1,6 +1,8 @@
-import React from 'react';
-import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
-import { ViewType } from '../types/meeting';
+import React, { useState, useRef, useEffect } from "react";
+import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
+import { ViewType } from "../types/meeting";
+import { Button } from "@/components/ui/Button";
+import { DropDown } from "@/components/ui/DropDown";
 
 interface CalendarHeaderProps {
   currentDate: Date;
@@ -9,6 +11,25 @@ interface CalendarHeaderProps {
   onViewChange: (view: ViewType) => void;
   onAddMeeting: () => void;
 }
+const userOptions = [
+  { value: "all", label: "All Users" },
+  { value: "active", label: "Active Users" },
+  { value: "inactive", label: "Inactive Users" },
+]
+
+const statusOptions = [
+  { value: "all", label: "All Status" },
+  { value: "new", label: "New" },
+  { value: "in-progress", label: "In Progress" },
+  { value: "completed", label: "Completed" },
+]
+
+const timePeriodOptions = [
+  { value: "today", label: "Today" },
+  { value: "this-week", label: "This Week" },
+  { value: "this-month", label: "This Month" },
+  { value: "this-year", label: "This Year" },
+]
 
 export const CalendarHeader: React.FC<CalendarHeaderProps> = ({
   currentDate,
@@ -17,95 +38,88 @@ export const CalendarHeader: React.FC<CalendarHeaderProps> = ({
   onViewChange,
   onAddMeeting,
 }) => {
-  const formatDate = () => {
-    if (currentView === 'yearly') {
-      return currentDate.getFullYear().toString();
-    }
-    if (currentView === 'monthly') {
-      return currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-    }
-    if (currentView === 'weekly') {
-      const weekStart = new Date(currentDate);
-      weekStart.setDate(currentDate.getDate() - currentDate.getDay());
-      const weekEnd = new Date(weekStart);
-      weekEnd.setDate(weekStart.getDate() + 6);
-      return `${weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${weekEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
-    }
-    return currentDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-  };
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const [selectedUser, setSelectedUser] = useState("all")
+  const [selectedStatus, setSelectedStatus] = useState("all")
+  const [selectedTimePeriod, setSelectedTimePeriod] = useState("this-month")
 
-  const navigateDate = (direction: 'prev' | 'next') => {
-    const newDate = new Date(currentDate);
-    
-    switch (currentView) {
-      case 'daily':
-        newDate.setDate(newDate.getDate() + (direction === 'next' ? 1 : -1));
-        break;
-      case 'weekly':
-        newDate.setDate(newDate.getDate() + (direction === 'next' ? 7 : -7));
-        break;
-      case 'monthly':
-        newDate.setMonth(newDate.getMonth() + (direction === 'next' ? 1 : -1));
-        break;
-      case 'yearly':
-        newDate.setFullYear(newDate.getFullYear() + (direction === 'next' ? 1 : -1));
-        break;
-    }
-    
-    onDateChange(newDate);
-  };
+
+
+  // const formatDate = () => {
+  //   if (currentView === "yearly") return currentDate.getFullYear().toString();
+  //   if (currentView === "monthly")
+  //     return currentDate.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+  //   if (currentView === "weekly") {
+  //     const weekStart = new Date(currentDate);
+  //     weekStart.setDate(currentDate.getDate() - currentDate.getDay());
+  //     const weekEnd = new Date(weekStart);
+  //     weekEnd.setDate(weekStart.getDate() + 6);
+  //     return `${weekStart.toLocaleDateString("en-US", {
+  //       month: "short",
+  //       day: "numeric",
+  //     })} - ${weekEnd.toLocaleDateString("en-US", {
+  //       month: "short",
+  //       day: "numeric",
+  //       year: "numeric",
+  //     })}`;
+  //   }
+  //   return currentDate.toLocaleDateString("en-US", {
+  //     month: "long",
+  //     day: "numeric",
+  //     year: "numeric",
+  //   });
+  // };
+
+  // const navigateDate = (direction: "prev" | "next") => {
+  //   const newDate = new Date(currentDate);
+  //   switch (currentView) {
+  //     case "daily":
+  //       newDate.setDate(newDate.getDate() + (direction === "next" ? 1 : -1));
+  //       break;
+  //     case "weekly":
+  //       newDate.setDate(newDate.getDate() + (direction === "next" ? 7 : -7));
+  //       break;
+  //     case "monthly":
+  //       newDate.setMonth(newDate.getMonth() + (direction === "next" ? 1 : -1));
+  //       break;
+  //     case "yearly":
+  //       newDate.setFullYear(newDate.getFullYear() + (direction === "next" ? 1 : -1));
+  //       break;
+  //   }
+  //   onDateChange(newDate);
+  // };
 
   return (
-    <div className="flex items-center justify-between mb-6">
-      <div className="flex items-center space-x-4">
-        <h1 className="text-2xl font-semibold text-gray-900">Meetings</h1>
-        <div className="text-sm text-gray-500">
-          Organize and keep track of your daily activities. Stay close to your team members.
+    <header>
+      <div className=" flex items-center justify-between
+        h-[68px]
+        border-b border-[var(--border-gray)]
+        px-8 py-4
+        bg-background
+      ">
+        <div className="flex items-center gap-2">
+          <DropDown
+            options={timePeriodOptions}
+            value={selectedTimePeriod}
+            onChange={setSelectedTimePeriod}
+          />
+          <DropDown options={userOptions} value={selectedUser} onChange={setSelectedUser} />
+          <DropDown options={statusOptions} value={selectedStatus} onChange={setSelectedStatus} />
         </div>
-      </div>
-      
-      <div className="flex items-center space-x-4">
-        <div className="flex items-center space-x-2">
-          <select 
-            value={currentView}
-            onChange={(e) => onViewChange(e.target.value as ViewType)}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-gray-400 focus:outline-none"
-          >
-            <option value="daily">Daily</option>
-            <option value="weekly">Weekly</option>
-            <option value="monthly">Monthly</option>
-            <option value="yearly">Yearly</option>
-          </select>
-        </div>
-        
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={() => navigateDate('prev')}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </button>
-          
-          <div className="text-lg font-semibold text-gray-900 min-w-[200px] text-center">
-            {formatDate()}
-          </div>
-          
-          <button
-            onClick={() => navigateDate('next')}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-          >
-            <ChevronRight className="w-5 h-5" />
-          </button>
-        </div>
-        
-        <button
-          onClick={onAddMeeting}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2"
+        {/* === Right Add Button with Dropdown === */}
+        <div
+          className="relative flex min-w-[155px] "
         >
-          <Plus className="w-4 h-4" />
-          <span>Add Meeting</span>
-        </button>
+          <Button
+            onClick={onAddMeeting}
+            className="whitespace-nowrap bg-black  text-white"
+          >
+            <Plus size={16} className="" />
+            <span className="">New Meeting</span>
+          </Button>
+        </div>
       </div>
-    </div>
+    </header>
   );
 };

@@ -9,7 +9,7 @@ type inputProps = {
 
 const InputWithDropDown = ({inputName, optionName, options}: inputProps) => {
     return (
-        <div className="flex rounded-md border border-input bg-background focus-within:ring-2 focus-within:ring-ring">
+        <div className="flex rounded-md border shadow-sm  border-[var(--border-gray)] bg-background focus-within:ring-2 focus-within:ring-ring">
             {/* Amount Input */}
             <Field
                 id={inputName}
@@ -17,16 +17,16 @@ const InputWithDropDown = ({inputName, optionName, options}: inputProps) => {
                 type="number"
                 step="0.01"
                 min="0"
-                className="flex-1 rounded-l-md px-3 py-2 outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [appearance:textfield] w-1/4"
+                className="flex-1 text-sm rounded-l-md px-3 py-2 outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [appearance:textfield] w-1/4"
             />
 
             {/* Currency Select */}
-            <div className="flex items-center gap-1 border-l">
+            <div className="flex items-center gap-1 border-l border-[var(--border-gray)] ">
                 <Field
                     as="select"
                     id={optionName}
                     name={optionName}
-                    className="rounded-md bg-transparent outline-none pr-2"
+                    className="rounded-md text-sm bg-transparent outline-none pr-2"
                 >
                     {options?.map((option, index) => (
                         <option value={option.value}> {option.symbol} </option>

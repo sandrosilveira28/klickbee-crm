@@ -49,9 +49,60 @@ export const MeetingsCalendar: React.FC = () => {
         return <DailyView {...viewProps} />;
     }
   };
+  // helper inside MeetingsCalendar
+const getHeaderDate = () => {
+  switch (currentView) {
+    case 'daily':
+      // Full: Weekday, Month Day, Year
+      return currentDate.toLocaleDateString('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+      });
+
+  case 'weekly':
+  const start = new Date(currentDate);
+  const end = new Date(currentDate);
+
+  // Monday as start of week
+  start.setDate(currentDate.getDate() - currentDate.getDay() );
+  // Sunday as end of week
+  end.setDate(start.getDate() + 6);
+
+  const startStr = start.toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+  });
+
+  const endDay = end.toLocaleDateString('en-US', {
+    day: 'numeric',
+  });
+
+  const year = end.getFullYear();
+
+  return `${startStr} – ${endDay}, ${year}`;
+
+
+
+    case 'monthly':
+      // Month + Year only
+      return currentDate.toLocaleDateString('en-US', {
+        month: 'long',
+        year: 'numeric',
+      });
+
+    case 'yearly':
+      // Year only
+      return currentDate.getFullYear().toString();
+
+    default:
+      return currentDate.toLocaleDateString();
+  }
+};
+
 
   return (
-    <div className="w-full h-screen bg-gray-50">
+    <div className="">
       <div className="w-full flex flex-col">
         <CalendarHeader
           currentDate={currentDate}
@@ -62,9 +113,9 @@ export const MeetingsCalendar: React.FC = () => {
         />
 
         {/* Main Calendar Content */}
-        <div className="flex flex-1 p-4 gap-4">
+        <div className="flex flex-1  ">
           {/* Sidebar - Much smaller width to match Figma design */}
-          <div className="flex-shrink-0" style={{width: '22%'}}>
+          <div className="flex-shrink-0" style={{ width: '22%' }}>
             <MeetingsSidebar
               meetings={meetings}
               currentDate={currentDate}
@@ -74,11 +125,39 @@ export const MeetingsCalendar: React.FC = () => {
               onMeetingClick={openMeetingDetail}
             />
           </div>
-          
-          {/* Main calendar area - takes remaining space */}
-          <div className="flex-1 rounded-lg shadow-sm border border-gray-200 p-2">
+
+          <div className="flex-1 border-l border-[var(--border-gray)] ">
+            <div className="flex items-center justify-between py-4 px-8 border-b border-[var(--border-gray)]">
+              {/* Left: Date text */}
+              <div className=" font-medium">
+                 {getHeaderDate()}
+              </div>
+
+              {/* Right: View buttons */}
+              <div className="flex gap-2 bg-gray-50 rounded-md p-1">
+                {[
+                  { label: 'Day', value: 'daily' },
+                  { label: 'Week', value: 'weekly' },
+                  { label: 'Months', value: 'monthly' },
+                  { label: 'Years', value: 'yearly' },
+                ].map(btn => (
+                  <button
+                    key={btn.value}
+                    onClick={() => setCurrentView(btn.value as any)}
+                    className={`px-3 py-1 text-sm rounded-md border transition
+          ${currentView === btn.value
+                        ? 'bg-white shadow-sm border-[var(--border-gray)]'
+                        : 'hover:bg-white border-transparent'
+                      }`}
+                  >
+                    {btn.label}
+                  </button>
+                ))}
+              </div>
+            </div>
             {renderCalendarView()}
           </div>
+
         </div>
       </div>
 

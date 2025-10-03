@@ -1,8 +1,7 @@
 'use client'
 import GridView from "@/components/ui/GridView"
 import { DealCard } from "./DealCard"
-import type { Deal } from "../types"
-import { dealsData as initialDeals } from "../libs/DealsData"
+import { dealsData as initialDeals, type DealData as Deal } from "../libs/DealsData"
 import * as React from "react"
 import { Plus } from "lucide-react"
 import DealDetail from "./DealDetail"   // ✅ import your modal
@@ -96,12 +95,16 @@ export default function DealsGridView() {
         isOpen={isDetailOpen}
         deal={selectedDeal}
         onClose={closeDetail}
+
         onDelete={(id) => {
           setDeals((prev) => prev.filter((d) => d.id !== id))
           closeDetail()
         }}
         onEdit={(id) => {
-          console.log("Edit deal", id)
+        }}
+        onAddNotes={(id) => {
+        }}
+        onExport={(id) => {
         }}
       />
     </main>

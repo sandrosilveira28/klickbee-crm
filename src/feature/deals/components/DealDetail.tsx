@@ -10,6 +10,8 @@ interface DealDetailProps {
   onClose: () => void;
   onDelete?: (id: string) => void;
   onEdit?: (id: string) => void;
+  onAddNotes?: (id: string) => void;
+  onExport?: (id: string) => void;
 }
 
 export default function DealDetail({
@@ -18,6 +20,8 @@ export default function DealDetail({
   onClose,
   onDelete,
   onEdit,
+  onAddNotes,
+  onExport,
 }: DealDetailProps) {
   if (!deal) return null;
 
@@ -43,7 +47,6 @@ export default function DealDetail({
     },
     deal.priority && { label: 'Tags', value: deal.priority },
     deal.date && { label: 'Closed Date', value: deal.date },
-    { label: 'Notes', value: deal.notes },
 
   ].filter(Boolean) as { label: string; value: React.ReactNode }[];
 
@@ -52,9 +55,13 @@ export default function DealDetail({
       isOpen={isOpen}
       title={deal.dealName}
       details={details}
+      notes={deal.notes}
+      attachments={deal.attachments ?? []}
       onClose={onClose}
       onDelete={onDelete ? () => onDelete(deal.id) : undefined}
       onEdit={onEdit ? () => onEdit(deal.id) : undefined}
+      onAddNotes={onAddNotes ? () => onAddNotes(deal.id) : undefined}
+      onExport={onExport ? () => onExport(deal.id) : undefined}
     />
   );
 }

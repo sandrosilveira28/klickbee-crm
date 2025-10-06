@@ -12,6 +12,27 @@ type DealSlideOverProps = {
 }
 
 export default function DealSlideOver({ open, onClose }: DealSlideOverProps) {
+  const handleSubmit = async (values: any) => {
+    try {
+      // Call your API to create a new deal
+      const response = await fetch("/api/admin/deals", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create deal");
+      }
+
+      const data = await response.json();
+      console.log("Deal created successfully:", data);
+    } catch (error) {
+      console.error("Error creating deal:", error);
+    }
+  }
   return (
     <Modal open={open} onClose={onClose}>
       <aside
@@ -41,6 +62,7 @@ export default function DealSlideOver({ open, onClose }: DealSlideOverProps) {
             onCancel={onClose}
             onSubmit={(values) => {
               console.log("[v0] Deal submitted:", values)
+              handleSubmit(values)
               onClose()
             }}
           />

@@ -3,10 +3,12 @@ import { Button } from './Button'
 
 type uploadProps = {
     values: File[] | undefined,
-    setValue: (value: File[]) => void
+    setValue: (value: File[]) => void,
+    uploading?: boolean,
+    uploadFile: (e: React.ChangeEvent<HTMLInputElement>) => void,
 }
 
-const UploadButton = ({ values, setValue }: uploadProps) => {
+const UploadButton = ({ values, setValue, uploading, uploadFile }: uploadProps) => {
     return (
         <div className="flex flex-col gap-2">
             <label className="text-sm font-medium">Attached Files</label>
@@ -31,8 +33,10 @@ const UploadButton = ({ values, setValue }: uploadProps) => {
                             } else {
                                 setValue([...files])
                             }
+                            uploadFile(e)
                         }}
                     />
+                    {uploading && <div>Uploading…</div>}
                 </label>
             </div>
 

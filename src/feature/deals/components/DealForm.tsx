@@ -25,7 +25,7 @@ type DealFormValues = {
     closeDate: string
     tags: string[]
     notes: string
-    files: File[]
+    files: any[]
 }
 
 const schema = Yup.object({
@@ -67,17 +67,38 @@ export default function DealForm({
     onCancel: () => void
 }) {
     const [tagInput, setTagInput] = useState("")
+    const [uploading, setUploading] = useState(false);
+    const [uploadedFiles, setUploadedFiles] = useState<any[]>([]);
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files;
+        if (!files || files.length === 0) return;
+        const form = new FormData();
+        for (let i = 0; i < files.length; i++) form.append("file", files[i]);
+
+        setUploading(true);
+        const res = await fetch("/api/uploads", { method: "POST", body: form });
+        setUploading(false);
+        if (res.ok) {
+            const json = await res.json();
+            setUploadedFiles(prev => [...prev, ...json.files]);
+        } else {
+            alert("Upload failed");
+        }
+    };
 
     return (
         <Formik<DealFormValues>
             initialValues={initialValues}
             validationSchema={schema}
             onSubmit={(vals, { setSubmitting, resetForm }) => {
-                const cleaned = {
+                const payload = {
                     ...vals,
-                    tags: vals.tags.map((t) => t.trim()).filter(Boolean),
-                }
-                onSubmit(cleaned)
+                    tags: vals.tags ? vals.tags.map((t) => t.trim()).filter(Boolean) : [],
+                    files: uploadedFiles
+                };
+
+                onSubmit(payload)
                 setSubmitting(false)
                 resetForm()
             }}
@@ -159,7 +180,7 @@ export default function DealForm({
                             />
                         </FieldBlock>
 
-                        <TagInput name='Tags' values={values.tags} setValue={(values: string[]) => setFieldValue('tags', values)} input={tagInput}  setInput={(value: string) => setTagInput(value)} />
+                        <TagInput name='Tags' values={values.tags} setValue={(values: string[]) => setFieldValue('tags', values)} input={tagInput} setInput={(value: string) => setTagInput(value)} />
 
                         <FieldBlock name="notes" label="Notes">
                             <Field
@@ -171,7 +192,7 @@ export default function DealForm({
                                 className="w-full text-sm resize-y shadow-sm rounded-md border  border-[var(--border-gray)] bg-background px-3 py-2 outline-none focus:ring-1 focus:ring-gray-400 focus:outline-none"
                             />
                         </FieldBlock>
-                        <UploadButton values={values.files} setValue={(values) => setFieldValue('files', values)} />
+                        <UploadButton values={values.files} setValue={(values) => setFieldValue('files', values)} uploading={uploading} uploadFile={(e) => handleFileChange(e)} />
                     </div>
 
                     {/* Footer: sticky to panel bottom */}

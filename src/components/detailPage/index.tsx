@@ -149,7 +149,7 @@ const DetailModal: React.FC<DetailModalProps> = ({
 <div className=''>
 
         {/* Footer */}
-        {(onDelete || onEdit || onReschedule || onAddNotes) && (
+        {(onDelete || onEdit || onReschedule || onAddNotes || onExport) && (
           <div className="flex justify-between gap-2 border-t border-gray-200 px-3 py-4">
             {onDelete && (
               <Button

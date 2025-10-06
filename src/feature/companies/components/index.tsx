@@ -4,6 +4,7 @@ import { Table, TableColumn } from '@/components/ui/Table';
 import { Companie } from '../types/types';
 import { companiesData } from '../libs/companiesData';
 import { CompaniesHeader } from './CompaniesHeader';
+import CompanieDetail from './CompanieDetail';
 
 export const customerColumns: TableColumn<Companie>[] = [
     {
@@ -81,12 +82,45 @@ export const customerColumns: TableColumn<Companie>[] = [
 
 
 export default function Companies () {
+  const [selected, setSelected] = React.useState<Companie | null>(null)
+  const [open, setOpen] = React.useState(false)
+
+  const openDetail = (c: Companie) => { setSelected(c); setOpen(true) }
+  const closeDetail = () => { setOpen(false); setSelected(null) }
+
   return (
     <div className='overflow-x-hidden'>
       <CompaniesHeader/>
  <div className='py-8 px-6 overflow-x-hidden'>
              
-                <Table columns={customerColumns} data={companiesData} selectable={true} />
+                <Table 
+                  columns={customerColumns} 
+                  data={companiesData} 
+                  selectable={true}
+                  onRowClick={(record) => openDetail(record as Companie)}
+                />
+                <CompanieDetail 
+                  isOpen={open}
+                  company={selected}
+                  onClose={closeDetail}
+                  onDelete={(id: string) => {
+                    // Handle delete logic here
+                    console.log('Delete company:', id);
+                    closeDetail();
+                  }}
+                  onEdit={(id: string) => {
+                    // Handle edit logic here
+                    console.log('Edit company:', id);
+                  }}
+                  onAddNotes={(id: string) => {
+                    // Handle add notes logic here
+                    console.log('Add notes for company:', id);
+                  }}
+                  onExport={(id: string) => {
+                    // Handle export logic here
+                    console.log('Export company:', id);
+                  }}
+                />
             </div>
           </div>
   )

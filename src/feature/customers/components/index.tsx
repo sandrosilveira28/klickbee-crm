@@ -4,6 +4,7 @@ import { CustomerHeader } from './CustomerHeader'
 import { Table, TableColumn } from '@/components/ui/Table';
 import { Customer } from '../types/types';
 import { customersData } from '../libs/customerData';
+import CustomerDetail from './CustomerDetail';
 
 export const customerColumns: TableColumn<Customer>[] = [
   {
@@ -74,12 +75,45 @@ export const customerColumns: TableColumn<Customer>[] = [
 
 
 export default function Customers () {
+  const [selected, setSelected] = React.useState<Customer | null>(null)
+  const [open, setOpen] = React.useState(false)
+
+  const openDetail = (c: Customer) => { setSelected(c); setOpen(true) }
+  const closeDetail = () => { setOpen(false); setSelected(null) }
+
   return (
     <div className='overflow-x-hidden'>
       <CustomerHeader/>
  <div className='py-8 px-6 overflow-x-hidden'>
              
-                <Table columns={customerColumns} data={customersData} selectable={true} />
+                <Table 
+                  columns={customerColumns} 
+                  data={customersData} 
+                  selectable={true}
+                  onRowClick={(record) => openDetail(record as Customer)}
+                />
+                <CustomerDetail 
+                  isOpen={open}
+                  customer={selected}
+                  onClose={closeDetail}
+                  onDelete={(id: string) => {
+                    // Handle delete logic here
+                    console.log('Delete customer:', id);
+                    closeDetail();
+                  }}
+                  onEdit={(id: string) => {
+                    // Handle edit logic here
+                    console.log('Edit customer:', id);
+                  }}
+                  onAddNotes={(id: string) => {
+                    // Handle add notes logic here
+                    console.log('Add notes for customer:', id);
+                  }}
+                  onExport={(id: string) => {
+                    // Handle export logic here
+                    console.log('Export customer:', id);
+                  }}
+                />
             </div>
           </div>
   )

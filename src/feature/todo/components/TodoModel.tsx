@@ -12,6 +12,27 @@ type TodoSlideOverProps = {
 }
 
 export default function TodoSlideOver({ open, onClose }: TodoSlideOverProps) {
+  const handleSubmit = async (values: any) => {
+    try {
+      // Call your API to create a new deal
+      const response = await fetch("/api/admin/todos", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create todo");
+      }
+
+      const data = await response.json();
+      console.log("Todo created successfully:", data);
+    } catch (error) {
+      console.error("Error creating todo:", error);
+    }
+  }
   return (
     <Modal open={open} onClose={onClose}>
       <aside
@@ -40,7 +61,7 @@ export default function TodoSlideOver({ open, onClose }: TodoSlideOverProps) {
           <TodoForm
             onCancel={onClose}
             onSubmit={(values) => {
-              console.log("[v0] Deal submitted:", values)
+              handleSubmit(values)
               onClose()
             }}
           />

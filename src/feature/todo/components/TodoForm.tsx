@@ -2,58 +2,41 @@
 
 import type React from "react"
 
-import { useState, type KeyboardEvent } from "react"
+import { useState } from "react"
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import * as Yup from "yup"
 import { Button } from "@/components/ui/Button"
-import { AlertTriangle, ArrowUp, ChevronUp, Minus, Trash2, UploadCloud } from "lucide-react"
-import SearchableDropdown from "@/components/ui/SearchableDropdown"
-import TagInput from "@/components/ui/TagInput"
 import UploadButton from "@/components/ui/UploadButton"
-import InputWithDropDown from "@/components/ui/InputWithDropDown"
-import { options } from "@/feature/deals/libs/currencyOptions"
 
 type TodoFormValues = {
     taskName: string
-    linkto: string
-    assigned: string
+    linkedTo: string
+    assignedTo: string
     status: string
     priority: string
-    owner: string
     dueDate: string
-    tags: string[]
     notes: string
     files: File[]
 }
-const priorities = [
-  { value: "high", label: "High", icon: ArrowUp },
-  { value: "urgent", label: "Urgent", icon: AlertTriangle },
-  { value: "medium", label: "Medium", icon: ChevronUp },
-  { value: "low", label: "Low", icon: Minus },
-];
 
 const schema = Yup.object({
     taskName: Yup.string().trim().required(""),
-    linkto: Yup.string().trim().required("Company is required"),
-    assigned: Yup.string().trim(),
-    status: Yup.string().oneOf(["todo", "inprogress",  "onhold", "done"]).required("status is required"),
-    priority: Yup.string().oneOf(["high", "urgent",  "medium", "low"]).required("status is required"),
-    owner: Yup.string().trim().required("Owner is required"),
+    linkedTo: Yup.string().trim().required("Company is required"),
+    assignedTo: Yup.string().trim(),
+    status: Yup.string().oneOf(["todo", "inprogress", "onhold", "done"]).required("status is required"),
+    priority: Yup.string().oneOf(["high", "urgent", "medium", "low"]).required("status is required"),
     dueDate: Yup.string().nullable(),
-    tags: Yup.array().of(Yup.string().trim().min(1)).max(10, "Up to 10 tags"),
     notes: Yup.string(),
     files: Yup.array().of(Yup.mixed<File>()),
 })
 
 const initialValues: TodoFormValues = {
     taskName: "",
-    linkto: "",
-    assigned: "",
+    linkedTo: "",
+    assignedTo: "",
     status: "todo",
     priority: "high",
-    owner: "Claire Brunet",
     dueDate: "",
-    tags: [],
     notes: "",
     files: [],
 }
@@ -65,18 +48,35 @@ export default function TodoForm({
     onSubmit: (values: TodoFormValues) => void
     onCancel: () => void
 }) {
-    const [tagInput, setTagInput] = useState("")
+    const [uploading, setUploading] = useState(false);
+    const [uploadedFiles, setUploadedFiles] = useState<any[]>([]);
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files;
+        if (!files || files.length === 0) return;
+        const form = new FormData();
+        for (let i = 0; i < files.length; i++) form.append("file", files[i]);
+
+        setUploading(true);
+        const res = await fetch("/api/uploadFile", { method: "POST", body: form });
+        setUploading(false);
+        if (res.ok) {
+            const json = await res.json();
+            setUploadedFiles(prev => [...prev, ...json.files]);
+        } else {
+            alert("Upload failed");
+        }
+    };
 
     return (
         <Formik<TodoFormValues>
             initialValues={initialValues}
             validationSchema={schema}
             onSubmit={(vals, { setSubmitting, resetForm }) => {
-                const cleaned = {
+                const payload = {
                     ...vals,
-                    tags: vals.tags.map((t) => t.trim()).filter(Boolean),
-                }
-                onSubmit(cleaned)
+                    files: uploadedFiles
+                };
+                onSubmit(payload)
                 setSubmitting(false)
                 resetForm()
             }}
@@ -94,11 +94,11 @@ export default function TodoForm({
                             />
                         </FieldBlock>
 
-                        <FieldBlock name="linkto" label="Linked To">
+                        <FieldBlock name="linkedTo" label="Linked To">
                             <Field
                                 as="select"
-                                id="linkto"
-                                name="linkto"
+                                id="linkedTo"
+                                name="linkedTo"
                                 className="w-full text-sm rounded-md shadow-sm border  border-[var(--border-gray)] bg-background px-3 py-2 outline-none focus:ring-1 focus:ring-gray-400 focus:outline-none"
                             >
                                 <option>Claire Brunet</option>
@@ -107,11 +107,11 @@ export default function TodoForm({
                             </Field>
                         </FieldBlock>
 
-                        <FieldBlock name="assigned" label="Assigned To">
+                        <FieldBlock name="assignedTo" label="Assigned To">
                             <Field
                                 as="select"
-                                id="assigned"
-                                name="linkto"
+                                id="assignedTo"
+                                name="assignedTo"
                                 className="w-full text-sm rounded-md shadow-sm border  border-[var(--border-gray)] bg-background px-3 py-2 outline-none focus:ring-1 focus:ring-gray-400 focus:outline-none"
                             >
                                 <option>Claire Brunet</option>
@@ -168,7 +168,7 @@ export default function TodoForm({
                                 className="w-full text-sm resize-y shadow-sm rounded-md border  border-[var(--border-gray)] bg-background px-3 py-2 outline-none focus:ring-1 focus:ring-gray-400 focus:outline-none"
                             />
                         </FieldBlock>
-                        <UploadButton values={values.files} setValue={(values) => setFieldValue('files', values)} />
+                        <UploadButton values={values.files} setValue={(values) => setFieldValue('files', values)} uploading={uploading} uploadFile={(e) => handleFileChange(e)} />
                     </div>
 
                     {/* Footer: sticky to panel bottom */}

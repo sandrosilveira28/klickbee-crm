@@ -8,6 +8,7 @@ import { tasksData } from '../libs/taskData';
 import { TaskData } from '../types/types';
 import { TableColumn } from '@/components/ui/Table';
 import TodoGridView from './TodoGridView';
+import TodoDetail from './TodoDetail';
 
 const taskColumns: TableColumn<TaskData>[] = [
   {
@@ -41,6 +42,7 @@ const taskColumns: TableColumn<TaskData>[] = [
         'Done': 'bg-[#DCFCE7] text-[#166534]',
         'On-Hold': 'bg-[#FFEAD5] text-[#9A3412]',
       }[String(status)] || 'bg-[#E4E4E7] text-[#3F3F46]'
+
       return (
         <span className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ${cls}`}>
           {String(status)}
@@ -52,7 +54,6 @@ const taskColumns: TableColumn<TaskData>[] = [
     key: 'priority',
     title: 'Priority',
     dataIndex: 'priority',
-    sortable: false,
     render: (priority) => {
       const value = String(priority)
       const base = 'inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium'
@@ -90,21 +91,45 @@ const taskColumns: TableColumn<TaskData>[] = [
 
 export  default  function TODO  () {
   const [view, setView] = React.useState<'table' | 'grid'>('table');
-   return (
-    <div>
-     <TodoHeader view={view} setView={(view: 'table' | 'grid') => setView(view)} />
-     <div className='py-8 px-6 xl:w-[1015px] 2xl:w-full'>
-       <div className='rounded-lg border border-[var(--border-gray)] bg-white shadow-sm'>
-         {view === 'table' ? (
-          <Table columns={taskColumns} data={tasksData} selectable={true} />
-         ) : 
-         (
-           <TodoGridView  />
-         )
-         }
-       </div>
-     </div>
+  const [selectedTask, setSelectedTask] = React.useState<TaskData | null>(null)
+  const [isDetailOpen, setIsDetailOpen] = React.useState(false)
+
+  const openDetail = (task: TaskData) => {
+    setSelectedTask(task)
+    setIsDetailOpen(true)
+  }
+  const closeDetail = () => {
+    setIsDetailOpen(false)
+    setSelectedTask(null)
+  }
+  return (
+    <div className='overflow-x-hidden'>
+      <TodoHeader view={view} setView={(view: 'table' | 'grid') => setView(view)} />
+      <div className='py-8 px-6 overflow-x-hidden'>
+        {view === 'table' ? (
+          <>
+            <Table 
+              columns={taskColumns} 
+              data={tasksData} 
+              selectable={true}
+              onRowClick={(record) => openDetail(record as TaskData)}
+            />
+            {isDetailOpen && (
+              <TodoDetail 
+                isOpen={isDetailOpen}
+                task={selectedTask}
+                onClose={closeDetail}
+                onDelete={() => closeDetail()}
+                onEdit={() => {}}
+                onAddNotes={() => {}}
+                onExport={() => {}}
+              />
+            )}
+          </>
+        ) : (
+          <TodoGridView />
+        )}
+      </div>
     </div>
   )
 }
-

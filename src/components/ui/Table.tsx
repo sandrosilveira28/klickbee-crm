@@ -23,6 +23,7 @@ export interface TableProps<T = any> {
   rowKey?: string
   selectable?: boolean
   onSelectionChange?: (selectedKeys: string[], selectedRows: T[]) => void
+  onRowClick?: (record: T, index: number, event: React.MouseEvent<HTMLTableRowElement>) => void
   className?: string
   loading?: boolean
   emptyText?: string
@@ -36,6 +37,7 @@ export interface TableRowProps<T = any> {
   onSelect?: (checked: boolean) => void
   selectable?: boolean
   showLeftStickyShadow?: boolean
+  onRowClick?: (record: T, index: number, event: React.MouseEvent<HTMLTableRowElement>) => void
 }
 
 // Badge component for stage indicators
@@ -73,10 +75,20 @@ const TableRow = <T,>({
   selected = false, 
   onSelect, 
   selectable = false,
-  showLeftStickyShadow = false
+  showLeftStickyShadow = false,
+  onRowClick,
 }: TableRowProps<T>) => {
+  const handleRowClick = (e: React.MouseEvent<HTMLTableRowElement>) => {
+    // Prevent triggering when clicking interactive elements
+    const target = e.target as HTMLElement
+    const tag = target.tagName.toLowerCase()
+    if (tag === 'input' || tag === 'button' || target.closest('button') || target.closest('a') || tag === 'a' || tag === 'svg' || target.closest('svg') || target.closest('label')) {
+      return
+    }
+    onRowClick?.(record, index, e)
+  }
   return (
-    <tr className={`border-b border-[var(--border-gray)] hover:bg-gray-50`}>
+    <tr onClick={handleRowClick} className={`border-b border-[var(--border-gray)] hover:bg-gray-50 ${onRowClick ? 'cursor-pointer' : ''}`}>
       {selectable && (
         <td className="px-4 py-3">
           <div className="relative">
@@ -122,7 +134,7 @@ const TableRow = <T,>({
           )}
         </td>
       ))}
-      <td className="px-4 py-3 sticky  -right-1 bg-white z-10" style={{ width: '48px', boxShadow: showLeftStickyShadow ? 'inset 8px 0 8px -8px rgba(0,0,0,0.15)' : 'none' }}>
+      <td className="px-4 py-3 sticky  right-0 bg-white z-10" style={{ width: '48px', boxShadow: showLeftStickyShadow ? 'inset 8px 0 8px -8px rgba(0,0,0,0.15)' : 'none' }}>
         <div className="flex items-center justify-center">
           <button className="p-1 hover:bg-gray-200 rounded">
             <MoreHorizontal className="h-4 w-4 text-gray-500" />
@@ -140,6 +152,7 @@ export const Table = <T,>({
   rowKey = 'id',
   selectable = false,
   onSelectionChange,
+  onRowClick,
   className = '',
   loading = false,
   emptyText = '-'
@@ -226,7 +239,8 @@ export const Table = <T,>({
 
   return (
      <div
-    className={`overflow-hidden ${className}`}
+    className={` rounded-lg border border-[var(--border-gray)] shadow-sm
+       w-full max-w-full overflow-hidden ${className}`}
   >
     <div ref={scrollRef} className="relative custom-scrollbar  overflow-x-auto">
       <table className="divide-y w-full divide-[var(--border-gray)]">
@@ -294,7 +308,7 @@ export const Table = <T,>({
                 </th>
               ))}
               <th 
-                className="px-6 py-3 sticky -right-1 bg-white z-10"
+                className="px-6 py-3 sticky right-0 bg-white z-10"
                 style={{ width: '48px', boxShadow: showLeftStickyShadow ? 'inset 8px 0 8px -10px  rgba(0,0,0,0.15)' : 'none' }}
               >
               </th>
@@ -321,6 +335,7 @@ export const Table = <T,>({
                   onSelect={(checked) => handleRowSelect(record[rowKey], checked)}
                   selectable={selectable}
                   showLeftStickyShadow={showLeftStickyShadow}
+                  onRowClick={onRowClick as any}
                 />
               ))
             )}

@@ -4,6 +4,7 @@ import { DealsHeader } from './Deals-Header';
 import { Table, TableColumn, Badge } from '@/components/ui/Table';
 import { dealsData, DealData } from '../libs/DealsData';
 import GridView from './DealsGridView'
+import DealDetail from './DealDetail'
 
 const columns: TableColumn<DealData>[] = [
   { key: 'dealName', title: 'Deal Name', dataIndex: 'dealName', sortable: true },
@@ -21,19 +22,48 @@ const columns: TableColumn<DealData>[] = [
 
 const Deals = () => {
   const [view, setView] = React.useState<'table' | 'grid'>('table');
+  const [selectedDeal, setSelectedDeal] = React.useState<DealData | null>(null)
+  const [isDetailOpen, setIsDetailOpen] = React.useState(false)
+
+  const openDetail = (deal: DealData) => {
+    setSelectedDeal(deal)
+    setIsDetailOpen(true)
+  }
+  const closeDetail = () => {
+    setIsDetailOpen(false)
+    setSelectedDeal(null)
+  }
   return (
-   <div>
+   <div className='overflow-x-hidden'>
     <DealsHeader view={view} setView={(view: 'table' | 'grid') => setView(view)} />
-    <div className='py-8 px-6 xl:w-[1015px] 2xl:w-full'>
-      <div className='rounded-lg border border-[var(--border-gray)] bg-white shadow-sm'>
+    <div className='py-8 px-6 overflow-x-hidden'>
+     
         {view === 'table' ? (
-          <Table columns={columns} data={dealsData} selectable={true} />
+          <>
+            <Table 
+              columns={columns} 
+              data={dealsData} 
+              selectable={true}
+              onRowClick={(record) => openDetail(record as DealData)}
+            />
+            <DealDetail 
+              isOpen={isDetailOpen}
+              deal={selectedDeal}
+              onClose={closeDetail}
+              onDelete={(id) => {
+                closeDetail()
+              }}
+              onEdit={() => {}}
+              onAddNotes={() => {}}
+              onExport={() => {}}
+            />
+          </>
         ) : (
           <GridView  />
         )}
       </div>
     </div>
-   </div>
+
   );
 };
 

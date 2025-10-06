@@ -11,6 +11,8 @@ export interface DealData {
   tags ?:string
   date ?:string 
   priority? : string
+  notes?: string
+  attachments?: string[]
 }
 
 export const dealsData: DealData[] = [
@@ -26,7 +28,10 @@ export const dealsData: DealData[] = [
     activity: ' call-2 days' ,
     tags:'Desing,B2B',
     date : '15 Sep,2025',
-    priority: 'VIP, High Priority'
+    priority: 'VIP, High Priority',
+    notes:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+    ,attachments: ['Attached_file_2024.pdf', 'Site_plan.png']
+
   },
   {
     id: '2',
@@ -40,8 +45,9 @@ export const dealsData: DealData[] = [
      activity: ' call-2 days' ,
     tags:'Desing,B2B',
      date : '15 Sep,2025',
-    priority: 'VIP, High Priority'
-
+    priority: 'VIP, High Priority',
+ notes:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+ attachments: ['contract_draft.docx']
 
   },
   {
@@ -56,7 +62,9 @@ export const dealsData: DealData[] = [
      activity: ' call-2 days' ,
     tags:'Desing,B2B',
     date : '15 Sep,2025',
-    priority: 'VIP, High Priority'
+     notes:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    priority: 'VIP, High Priority',
+    attachments: ['attached_file_2024.pdf', 'site_plan.png']
 
   },
   {
@@ -71,7 +79,9 @@ export const dealsData: DealData[] = [
      activity: ' call-2 days' ,
     tags:'Desing,B2B',
     date : '15 Sep,2025',
-    priority: 'VIP, High Priority'
+      notes:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    priority: 'VIP, High Priority',
+    attachments: ['attached_file_2024.pdf', 'site_plan.png']                
   },
   {
     id: '5',
@@ -85,7 +95,9 @@ export const dealsData: DealData[] = [
      activity: ' call-2 days' ,
     tags:'Desing,B2B',
     date : '15 Sep,2025',
-    priority: 'VIP, High Priority'
+      notes:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    priority: 'VIP, High Priority',
+    attachments: ['attached_file_2024.pdf', 'site_plan.png']
   },
   {
     id: '6',
@@ -99,7 +111,9 @@ export const dealsData: DealData[] = [
     //  activity: ' call-2 days' ,
     tags:'Desing,B2B',
     date : '15 Sep,2025',
-    priority: 'VIP, High Priority'
+      notes:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    priority: 'VIP, High Priority',
+    attachments: ['attached_file_2024.pdf', 'site_plan.png']
   },
   {
     id: '7',
@@ -113,7 +127,9 @@ export const dealsData: DealData[] = [
      activity: ' call-2 days' ,
     tags:'Desing,B2B',
     date : '15 Sep,2025',
-    priority: 'VIP, High Priority'
+      notes:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    priority: 'VIP, High Priority',
+    attachments: ['attached_file_2024.pdf', 'site_plan.png']
   },
   {
     id: '8',
@@ -127,7 +143,9 @@ export const dealsData: DealData[] = [
      activity: ' call-2 days' ,
     tags:'Desing,B2B',
     date : '15 Sep,2025',
-    priority: 'VIP, High Priority'
+      notes:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    priority: 'VIP, High Priority',
+    attachments: ['attached_file_2024.pdf', 'site_plan.png']
   },
   {
     id: '9',
@@ -141,7 +159,9 @@ export const dealsData: DealData[] = [
      activity: ' call-2 days' ,
     tags:'Desing,B2B',
     date : '15 Sep,2025',
-    priority: 'VIP, High Priority'
+      notes:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    priority: 'VIP, High Priority',
+    attachments: ['attached_file_2024.pdf', 'site_plan.png']
   },
   {
     id: '10',
@@ -155,6 +175,7 @@ export const dealsData: DealData[] = [
      activity: ' call-2 days' ,
     tags:'Desing,B2B',
     date : '15 Sep,2025',
-    priority: 'VIP, High Priority'
+    priority: 'VIP, High Priority',
+    attachments: ['attached_file_2024.pdf', 'site_plan.png']
   },
 ]

@@ -1,7 +1,8 @@
 'use client';
 import React from 'react';
-import { X } from 'lucide-react';
+import { Delete, Download, Edit, Plus, Trash2, X } from 'lucide-react';
 import Modal from '@/components/ui/Modal';
+import { Button } from '../ui/Button';
 
 export interface DetailItem {
   label: string;
@@ -21,6 +22,8 @@ interface DetailModalProps {
   onDelete?: () => void;
   onEdit?: () => void;
   onReschedule?: () => void;
+  onAddNotes?: () => void;
+  onExport?: () => void;
 }
 
 const DetailModal: React.FC<DetailModalProps> = ({
@@ -35,14 +38,16 @@ const DetailModal: React.FC<DetailModalProps> = ({
   onDelete,
   onEdit,
   onReschedule,
+  onAddNotes,
+  onExport,
 }) => {
   if (!isOpen) return null;
 
   return (
     <Modal open={isOpen} onClose={onClose}>
-      <div className="bg-white w-[400px] fixed right-0 top-0 h-full shadow-lg overflow-y-auto">
+      <div className="bg-white w-[450px] fixed right-0 top-0 h-full shadow-lg overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
+        <div className="flex items-center justify-between p-6 border-b border-[var(--border-gray)]">
           <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
           <button
             onClick={onClose}
@@ -51,11 +56,15 @@ const DetailModal: React.FC<DetailModalProps> = ({
             <X className="w-6 h-6" />
           </button>
         </div>
+        
 
-        <div className="p-6 space-y-8">
+
+        <div >
           {/* Dynamic Details */}
-          <section>
-            <h3 className="font-medium text-gray-900 mb-4">Details</h3>
+          <div className='border-b border-[var(--border-gray)]'>
+
+          <section className='p-6 space-y-8' >
+            <h3 className="font-medium text-gray-900 mb-4">Project Overview</h3>
             <div className="space-y-3 text-sm text-gray-700">
               {details.map((item, idx) => (
                 <div
@@ -68,43 +77,57 @@ const DetailModal: React.FC<DetailModalProps> = ({
               ))}
             </div>
           </section>
+          </div>
+<div className='border-b border-[var(--border-gray)]'>
 
           {description && (
-            <section>
+            <section className='p-6 space-y-8'>
               <h3 className="font-medium text-gray-900 mb-2">Description</h3>
               <p className="text-sm text-gray-700 whitespace-pre-wrap">{description}</p>
             </section>
           )}
+</div>
+<div className='border-b border-[var(--border-gray)]'>
 
           {notes && (
-            <section>
+            <section className='p-6 space-y-8'> 
               <h3 className="font-medium text-gray-900 mb-2">Notes</h3>
               <p className="text-sm text-gray-700 whitespace-pre-wrap">{notes}</p>
             </section>
           )}
+</div>
 
-          {attachments && attachments.length > 0 && (
-            <section>
-              <h3 className="font-medium text-gray-900 mb-2">Attachments</h3>
+<div className='border-b border-[var(--border-gray)]'>
+
+          <section className='p-6 space-y-8'>
+            <h3 className="font-medium text-gray-900 mb-2">Attached Files</h3>
+            {attachments && attachments.length > 0 ? (
               <div className="space-y-2">
                 {attachments.map((file, idx) => (
                   <div
                     key={idx}
                     className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-md"
                   >
-                    <span className="text-sm text-blue-600">{file}</span>
-                    <button className="text-gray-600 hover:text-gray-800">
+                    <span className="text-sm text-blue-600 truncate">{file}</span>
+                    <button
+                      className="text-gray-600 hover:text-gray-800"
+                    >
                       Download
                     </button>
                   </div>
                 ))}
               </div>
-            </section>
-          )}
+            ) : (
+              <div className="text-sm text-gray-500">No attached files</div>
+            )}
+          </section>
+</div>
 
-          {activityLog && activityLog.length > 0 && (
-            <section>
-              <h3 className="font-medium text-gray-900 mb-2">Activity Log</h3>
+
+
+          <section className='p-6 space-y-8'>
+            <h3 className="font-medium text-gray-900 mb-2">Status Log</h3>
+            {activityLog && activityLog.length > 0 ? (
               <div className="space-y-3 text-sm">
                 {activityLog.map((log, idx) => (
                   <div key={idx}>
@@ -117,42 +140,67 @@ const DetailModal: React.FC<DetailModalProps> = ({
                   </div>
                 ))}
               </div>
-            </section>
-          )}
+            ) : (
+              <div className="text-sm text-gray-500">No Status yet</div>
+            )}
+          </section>
+
         </div>
+<div className=''>
 
         {/* Footer */}
-        {(onDelete || onEdit || onReschedule) && (
-          <div className="flex justify-between gap-3 border-t border-gray-200 px-6 py-4">
+        {(onDelete || onEdit || onReschedule || onAddNotes || onExport) && (
+          <div className="flex justify-between gap-2 border-t border-gray-200 px-3 py-4">
             {onDelete && (
-              <button
+              <Button
                 onClick={onDelete}
-                className="p-2 text-sm font-medium rounded-lg text-red-500 border border-red-500"
+                className="p-1 text-sm font-medium rounded-lg text-red-500 border border-red-500"
               >
-                Delete
-              </button>
+                <Trash2 size={15}/>
+              </Button>
             )}
             <div className="flex gap-4">
-              {onEdit && (
-                <button
-                  onClick={onEdit}
+                {onExport && (
+                <Button
+                  onClick={onExport}
                   className="px-4 py-2 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-50"
                 >
-                  Edit
-                </button>
+                  <img src="\icons\File.svg" alt="Export" className='h-4 w-4' />
+                  Export        
+                   </Button>
+              )}
+              {onEdit && (
+                <Button
+                  onClick={onEdit}
+                  className="px-4 py-2 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-50 whitespace-nowrap"
+                >
+                  <Edit size={15}/>
+                  Edit Deal
+                </Button>
               )}
               {onReschedule && (
-                <button
+                <Button
                   onClick={onReschedule}
                   className="px-4 py-2 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-50"
                 >
                   Reschedule
-                </button>
+                </Button>
               )}
+              {onAddNotes && (
+                <Button
+                  onClick={onAddNotes}
+                  className="px-4 py-2 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-50 whitespace-nowrap"
+                >
+                  <Plus size={15}/>
+                  Add Notes
+                </Button>
+              )}
+            
             </div>
           </div>
         )}
-      </div>
+</div>
+</div>
     </Modal>
   );
 };

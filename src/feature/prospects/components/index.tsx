@@ -6,6 +6,7 @@ import { ProspectHeader } from './ProspectHeader'
 import { prospectsData } from '../libs/prospectsdata'
 import { TableColumn } from '@/components/ui/Table'
 import { Contact } from '../types/types'
+import ProspectDetail from './ProspectDetail'
 
 export const prospectsColumns: TableColumn<Contact>[] = [
   {
@@ -77,16 +78,45 @@ export const prospectsColumns: TableColumn<Contact>[] = [
 ]
 
 export default function Prospects () {
+  const [selected, setSelected] = React.useState<Contact | null>(null)
+  const [open, setOpen] = React.useState(false)
+
+  const openDetail = (c: Contact) => { setSelected(c); setOpen(true) }
+  const closeDetail = () => { setOpen(false); setSelected(null) }
+
   return (
-    <div>
+    <div className='overflow-x-hidden'>
       <ProspectHeader/>
-       <div className='py-8 px-6 xl:w-[1015px] 2xl:w-full'>
-            <div className='rounded-lg border border-[var(--border-gray)] bg-white shadow-sm'>
-             
-                <Table columns={prospectsColumns} data={prospectsData} selectable={true} />
-            </div>
-          </div>
-         </div>
+       <div className='py-8 px-6 overflow-x-hidden'>
+          <Table 
+            columns={prospectsColumns} 
+            data={prospectsData} 
+            selectable={true}
+            onRowClick={(record) => openDetail(record as Contact)}
+          />
+          <ProspectDetail 
+            isOpen={open}
+            contact={selected}
+            onClose={closeDetail}
+            onDelete={(id: string) => {
+              // Handle delete logic here
+              console.log('Delete prospect:', id);
+              closeDetail();
+            }}
+            onEdit={(id: string) => {
+              // Handle edit logic here
+              console.log('Edit prospect:', id);
+            }}
+            onAddNotes={(id: string) => {
+              // Handle add notes logic here
+              console.log('Add notes for prospect:', id);
+            }}
+            onExport={(id: string) => {
+              // Handle export logic here
+              console.log('Export prospect:', id);
+            }}
+          />
+        </div>
+      </div>
   )
 }
-

@@ -2,7 +2,7 @@
 import React from 'react';
 import DetailModal from '@/components/detailPage'; // the reusable modal we built earlier
 import { DealData } from '../libs/DealsData';
-import { User } from 'lucide-react';
+import { Badge } from '@/components/ui/Table';
 
 interface DealDetailProps {
   isOpen: boolean;
@@ -10,6 +10,8 @@ interface DealDetailProps {
   onClose: () => void;
   onDelete?: (id: string) => void;
   onEdit?: (id: string) => void;
+  onAddNotes?: (id: string) => void;
+  onExport?: (id: string) => void;
 }
 
 export default function DealDetail({
@@ -18,14 +20,15 @@ export default function DealDetail({
   onClose,
   onDelete,
   onEdit,
+  onAddNotes,
+  onExport,
 }: DealDetailProps) {
   if (!deal) return null;
 
   const details = [
-    { label: 'Deal Name', value: deal.dealName },
     { label: 'Company', value: deal.company },
     { label: 'Contact', value: deal.contact },
-    { label: 'Stage', value: deal.stage },
+    { label: 'Stage', value: (<Badge variant={deal.stage}>{deal.stage}</Badge>) },
     { label: 'Amount', value: `$${deal.amount.toLocaleString()}` },
     {
       label: 'Owner',
@@ -42,20 +45,23 @@ export default function DealDetail({
         </span>
       ),
     },
-    deal.activity && { label: 'Activity', value: deal.activity },
-    deal.tags && { label: 'Tags', value: deal.tags },
-    deal.date && { label: 'Date', value: deal.date },
-    deal.priority && { label: 'Priority', value: deal.priority },
+    deal.priority && { label: 'Tags', value: deal.priority },
+    deal.date && { label: 'Closed Date', value: deal.date },
+
   ].filter(Boolean) as { label: string; value: React.ReactNode }[];
 
   return (
     <DetailModal
       isOpen={isOpen}
-      title="Deal Details"
+      title={deal.dealName}
       details={details}
+      notes={deal.notes}
+      attachments={deal.attachments ?? []}
       onClose={onClose}
       onDelete={onDelete ? () => onDelete(deal.id) : undefined}
       onEdit={onEdit ? () => onEdit(deal.id) : undefined}
+      onAddNotes={onAddNotes ? () => onAddNotes(deal.id) : undefined}
+      onExport={onExport ? () => onExport(deal.id) : undefined}
     />
   );
 }

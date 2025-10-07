@@ -22,6 +22,9 @@ model User {
   meetings      Meeting[]
   linkedMeetings   Meeting[] @relation("linkedUser")
   assignedMeetings Meeting[] @relation("assignedUser")
+  prospects     Prospect[] @relation("userId")
+  ownerId       Prospect[] @relation("ownerId")
+  
 }
 
 enum DealStage {
@@ -143,4 +146,33 @@ model Meeting {
   @@index([linkedId])
   @@index([assignedId])
   
+}
+
+enum ProspectStatus {
+  New
+  Cold
+  Qualified
+  Warmlead
+  Converted
+  Notintrested
+}
+
+model Prospect {
+  id        String         @id @default(uuid())
+  userId   String
+  user     User           @relation("userId", fields: [userId], references: [id], onDelete: Cascade)
+  fullName  String
+  company   String
+  email     String?
+  phone     String?
+  status    ProspectStatus @default(New)
+  tags      String[]       @default([])
+  notes     String?
+  ownerId   String
+  owner     User           @relation("ownerId", fields: [ownerId], references: [id], onDelete: Cascade)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  @@index([ownerId])
+  @@index([userId])
 }

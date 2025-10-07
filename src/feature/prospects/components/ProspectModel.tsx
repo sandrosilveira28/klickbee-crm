@@ -12,6 +12,21 @@ type DealSlideOverProps = {
 }
 
 export default function ProspectSlideOver({ open, onClose }: DealSlideOverProps) {
+  const handleSubmit = async (values: any) => {
+    try {
+      const response = await fetch("/api/admin/prospects", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+      if (!response.ok) throw new Error("Failed to create prospect");
+      const data = await response.json();
+      console.log("Prospect created successfully:", data);
+      onClose();
+    } catch (err) {
+      console.error("Error creating prospect:", err);
+    }
+  }
   return (
     <Modal open={open} onClose={onClose}>
       <aside
@@ -39,10 +54,7 @@ export default function ProspectSlideOver({ open, onClose }: DealSlideOverProps)
         <div className="flex-1 overflow-y-auto ">
           <ProspectForm
             onCancel={onClose}
-            onSubmit={(values) => {
-              console.log("[v0] Deal submitted:", values)
-              onClose()
-            }}
+            onSubmit={(values) => handleSubmit(values)}
           />
         </div>
       </aside>

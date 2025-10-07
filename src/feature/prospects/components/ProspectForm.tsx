@@ -2,15 +2,12 @@
 
 import type React from "react"
 
-import { useState, type KeyboardEvent } from "react"
+import { useState } from "react"
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import * as Yup from "yup"
 import { Button } from "@/components/ui/Button"
-import { Trash2, UploadCloud } from "lucide-react"
 import SearchableDropdown from "@/components/ui/SearchableDropdown"
 import TagInput from "@/components/ui/TagInput"
-import UploadButton from "@/components/ui/UploadButton"
-import InputWithDropDown from "@/components/ui/InputWithDropDown"
 import { companyOptions } from "@/feature/deals/libs/companyData"
 
 type ProspectFormValues = {

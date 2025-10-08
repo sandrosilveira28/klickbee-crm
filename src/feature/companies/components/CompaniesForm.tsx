@@ -64,6 +64,25 @@ export default function CustomerForm({
 }) {
     const [tagInput, setTagInput] = useState("")
     const [assignInput, setAssignInput] = useState("")
+        const [uploading, setUploading] = useState(false);
+        const [uploadedFiles, setUploadedFiles] = useState<any[]>([]);
+    
+        const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+            const files = e.target.files;
+            if (!files || files.length === 0) return;
+            const form = new FormData();
+            for (let i = 0; i < files.length; i++) form.append("file", files[i]);
+    
+            setUploading(true);
+            const res = await fetch("/api/uploadFile", { method: "POST", body: form });
+            setUploading(false);
+            if (res.ok) {
+                const json = await res.json();
+                setUploadedFiles(prev => [...prev, ...json.files]);
+            } else {
+                alert("Upload failed");
+            }
+        };
 
     return (
         <Formik<CustomerFormValues>
@@ -72,8 +91,9 @@ export default function CustomerForm({
             onSubmit={(vals, { setSubmitting, resetForm }) => {
                 const cleaned = {
                     ...vals,
-                    tags: vals.tags.map((t) => t.trim()).filter(Boolean),
-                    assing: vals.tags.map((t) => t.trim()).filter(Boolean),
+                    assing: vals.assing ? vals.assing.map((t) => t.trim()).filter(Boolean) : [],
+                    tags: vals.tags ? vals.tags.map((t) => t.trim()).filter(Boolean) : [],
+                    files: uploadedFiles
                 }
                 onSubmit(cleaned)
                 setSubmitting(false)
@@ -136,7 +156,7 @@ export default function CustomerForm({
                             />
                         </FieldBlock>
 
-                        <TagInput name='Assign People' values={values.tags} setValue={(values: string[]) => setFieldValue('assing', values)} input={assignInput} setInput={(value: string) => setTagInput(value)} />
+                        <TagInput name='Assign People' values={values.tags} setValue={(values: string[]) => setFieldValue('assing', values)} input={assignInput} setInput={(value: string) => setAssignInput(value)} />
 
 
                         <FieldBlock name="owner" label="Owner">
@@ -180,7 +200,7 @@ export default function CustomerForm({
                                 className="w-full text-sm resize-y shadow-sm rounded-md border  border-[var(--border-gray)] bg-background px-3 py-2 outline-none focus:ring-1 focus:ring-gray-400 focus:outline-none"
                             />
                         </FieldBlock>
-                        <UploadButton values={values.files} setValue={(values) => setFieldValue('files', values)} />
+                        <UploadButton values={values.files} setValue={(values) => setFieldValue('files', values)} uploading={uploading} uploadFile={(e) => handleFileChange(e)} />
 
                     </div>
 

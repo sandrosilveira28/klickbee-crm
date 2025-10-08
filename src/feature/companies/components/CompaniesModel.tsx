@@ -12,6 +12,21 @@ type DealSlideOverProps = {
 }
 
 export default function CompanySlideOver({ open, onClose }: DealSlideOverProps) {
+  const handleSubmit = async (values: any) => {
+    try {
+      const response = await fetch("/api/admin/companies", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+      if (!response.ok) throw new Error("Failed to create company");
+      const data = await response.json();
+      console.log("Company created successfully:", data);
+      onClose();
+    } catch (err) {
+      console.error("Error creating company:", err);
+    }
+  }
   return (
     <Modal open={open} onClose={onClose}>
       <aside
@@ -39,10 +54,7 @@ export default function CompanySlideOver({ open, onClose }: DealSlideOverProps) 
         <div className="flex-1 overflow-y-auto ">
           <CompaniesrForm
             onCancel={onClose}
-            onSubmit={(values) => {
-              console.log("[v0] Deal submitted:", values)
-              onClose()
-            }}
+            onSubmit={(values) => handleSubmit(values)}
           />
         </div>
       </aside>

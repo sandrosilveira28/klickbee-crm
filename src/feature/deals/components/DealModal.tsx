@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button"
 import DealForm from "./DealForm"
 import { cn } from "@/libs/utils"
 import Modal from "@/components/ui/Modal"
+import { useDealStore } from '../stores/useDealStore'
 
 type DealSlideOverProps = {
   open: boolean
@@ -12,6 +13,16 @@ type DealSlideOverProps = {
 }
 
 export default function DealSlideOver({ open, onClose }: DealSlideOverProps) {
+ const addDeal = useDealStore((s) => s.addDeal);
+
+  const handleSubmit = async (values: any) => {
+    try {
+      await addDeal(values); 
+      onClose();
+    } catch (error) {
+      console.error("Error creating deal:", error);
+    }
+  };
   return (
     <Modal open={open} onClose={onClose}>
       <aside
@@ -41,6 +52,7 @@ export default function DealSlideOver({ open, onClose }: DealSlideOverProps) {
             onCancel={onClose}
             onSubmit={(values) => {
               console.log("[v0] Deal submitted:", values)
+              handleSubmit(values)
               onClose()
             }}
           />

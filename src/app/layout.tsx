@@ -2,18 +2,19 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { QueryProvider } from '@/providers/QueryProvider'
-import NavBar from '@/components/layout/NavBar'
-import SideBar from '@/components/layout/SideBar'
+import AuthProvider from "@/providers/SessionProvider"
+import ProtectedLayout from "@/components/ProtectedLayout"
+import { Toaster } from 'react-hot-toast'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Klickbee CMS',
   description: 'A modern CMS built with Next.js',
-   icons: {
+  icons: {
     icon: '/icons/Logo.svg',
   },
-  
+
 }
 
 export default function RootLayout({
@@ -25,17 +26,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <QueryProvider>
-          <div className="flex h-[100dvh]"> 
-                {/* Sidebar */}
-                <SideBar />
-                {/* Main content */}
-                <div className="flex flex-col flex-1 overflow-x-hidden">
-                  <NavBar />
-                  <div className=" overflow-y-auto overflow-x-hidden flex-1 scrollbar-hide">
-                    {children}
-                  </div>
-                </div>
-              </div>
+          <AuthProvider>
+            <ProtectedLayout>{children}</ProtectedLayout>
+                  <Toaster position="top-right"  reverseOrder={false} />
+
+          </AuthProvider>
         </QueryProvider>
       </body>
     </html>

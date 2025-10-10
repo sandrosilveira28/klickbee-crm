@@ -7,6 +7,7 @@ import { filterData, type FilterData } from "../libs/fillterData"
 import Filter from "@/components/filter"
 import CompanyModel from './CompaniesModel'
 import { Company } from "../types/types"
+import { useCompaniesStore } from "../stores/useCompaniesStore"
 
 
 const statusOptions = [
@@ -31,12 +32,19 @@ export function CompaniesHeader({ editCompany, showEditModal, onEditCompany, onC
 
   const [searchQueries, setSearchQueries] = useState<Record<string, string>>({});
   const [showNewCompany, setShowNewCompany] = useState<boolean>(false);
+  
+  // Get export function from store
+  const { exportAllCompanies } = useCompaniesStore();
 
   const handleCloseModal = () => {
     setShowNewCompany(false);
     if (onCloseEditModal) {
       onCloseEditModal();
     }
+  };
+
+  const handleExportCompanies = () => {
+    exportAllCompanies();
   };
 
   const handleToggle = (category: keyof FilterData, id: string) => {
@@ -104,6 +112,7 @@ export function CompaniesHeader({ editCompany, showEditModal, onEditCompany, onC
         {/* Export */}
          <Button
           leadingIcon={<img src="\icons\File.svg" alt="export-file" className="w-[17px] h-4 " />}
+          onClick={handleExportCompanies}
         >
           Export
         </Button>

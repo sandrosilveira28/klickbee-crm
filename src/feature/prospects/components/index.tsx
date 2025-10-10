@@ -95,7 +95,7 @@ export default function Prospects () {
     const [editProspect, setEditProspect] = useState<Prospect | null>(null);
   
 
-  const { prospects, fetchProspects, loading, deleteProspect } = useProspectsStore();
+  const { prospects, fetchProspects, loading, deleteProspect, exportSingleProspect } = useProspectsStore();
 
   useEffect(() => {
     fetchProspects();
@@ -134,8 +134,7 @@ export default function Prospects () {
               console.log('Add notes for prospect:', id);
             }}
             onExport={(id: string) => {
-              // Handle export logic here
-              console.log('Export prospect:', id);
+              exportSingleProspect(id);
             }}
           />
           <ProspectModel

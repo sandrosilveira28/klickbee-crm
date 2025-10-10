@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import toast from "react-hot-toast";
 import { Deal } from "../types";
+import { exportDealsToExcel, exportDealsWithColumns, exportSingleDealToExcel } from "../libs/excelExport";
 
 
 interface DealStore {
@@ -12,6 +13,10 @@ interface DealStore {
   addDeal: (deal: Omit<Deal, "id" | "ownerId" | "createdAt">) => Promise<void>;
   updateDeal: (id: string, deal: Partial<Deal>) => Promise<void>;
   deleteDeal: (id: string) => Promise<void>;
+  exportAllDeals: (filename?: string) => void;
+  exportSelectedDeals: (dealIds: string[], filename?: string) => void;
+  exportSingleDeal: (dealId: string, filename?: string) => void;
+  exportDealsWithColumns: (columns: (keyof Deal)[], filename?: string) => void;
 }
 
 export const useDealStore = create<DealStore>((set, get) => ({
@@ -104,6 +109,60 @@ export const useDealStore = create<DealStore>((set, get) => ({
       console.error("deleteDeal error:", err);
       toast.error(err.message);
       set({ error: err.message });
+    }
+  },
+
+  // 📊 Export all deals to Excel
+  exportAllDeals: (filename?: string) => {
+    const { deals } = get();
+    const result = exportDealsToExcel(deals, filename);
+    if (result.success) {
+      toast.success(`Deals exported successfully!`);
+    } else {
+      toast.error(result.message);
+    }
+  },
+
+  // 📊 Export selected deals to Excel
+  exportSelectedDeals: (dealIds: string[], filename?: string) => {
+    const { deals } = get();
+    const selectedDeals = deals.filter(deal => dealIds.includes(deal.id));
+    if (selectedDeals.length === 0) {
+      toast.error('No deals selected for export');
+      return;
+    }
+    const result = exportDealsToExcel(selectedDeals, filename);
+    if (result.success) {
+      toast.success(`Selected deals exported successfully!`);
+    } else {
+      toast.error(result.message);
+    }
+  },
+
+  // 📊 Export single deal to Excel
+  exportSingleDeal: (dealId: string, filename?: string) => {
+    const { deals } = get();
+    const deal = deals.find(d => d.id === dealId);
+    if (!deal) {
+      toast.error('Deal not found');
+      return;
+    }
+    const result = exportSingleDealToExcel(deal, filename);
+    if (result.success) {
+      toast.success(`Deal ${deal.dealName || 'Unknown'} exported successfully!`);
+    } else {
+      toast.error(result.message);
+    }
+  },
+
+  // 📊 Export deals with custom columns
+  exportDealsWithColumns: (columns: (keyof Deal)[], filename?: string) => {
+    const { deals } = get();
+    const result = exportDealsWithColumns(deals, columns, filename);
+    if (result.success) {
+      toast.success(`Deals exported successfully!`);
+    } else {
+      toast.error(result.message);
     }
   },
 }));

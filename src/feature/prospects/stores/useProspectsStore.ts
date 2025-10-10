@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import toast from "react-hot-toast";
 import { Prospect } from "../types/types";
+import { exportProspectsToExcel, exportProspectsWithColumns, exportSingleProspectToExcel } from "../libs/excelExport";
 
 interface ProspectStore {
   prospects: Prospect[];
@@ -11,6 +12,10 @@ interface ProspectStore {
   addProspect: (prospect: Omit<Prospect, "id" | "ownerId" | "userId" | "createdAt" | "updatedAt">) => Promise<void>;
   updateProspect: (id: string, prospect: Partial<Prospect>) => Promise<void>;
   deleteProspect: (id: string) => Promise<void>;
+  exportAllProspects: (filename?: string) => void;
+  exportSelectedProspects: (prospectIds: string[], filename?: string) => void;
+  exportSingleProspect: (prospectId: string, filename?: string) => void;
+  exportProspectsWithColumns: (columns: (keyof Prospect)[], filename?: string) => void;
 }
 
 export const useProspectsStore = create<ProspectStore>((set, get) => ({
@@ -118,6 +123,60 @@ export const useProspectsStore = create<ProspectStore>((set, get) => ({
       console.error("deleteProspect error:", err);
       toast.error(err.message);
       set({ error: err.message });
+    }
+  },
+
+  // 📊 Export all prospects to Excel
+  exportAllProspects: (filename?: string) => {
+    const { prospects } = get();
+    const result = exportProspectsToExcel(prospects, filename);
+    if (result.success) {
+      toast.success(`Prospects exported successfully!`);
+    } else {
+      toast.error(result.message);
+    }
+  },
+
+  // 📊 Export selected prospects to Excel
+  exportSelectedProspects: (prospectIds: string[], filename?: string) => {
+    const { prospects } = get();
+    const selectedProspects = prospects.filter(prospect => prospectIds.includes(prospect.id));
+    if (selectedProspects.length === 0) {
+      toast.error('No prospects selected for export');
+      return;
+    }
+    const result = exportProspectsToExcel(selectedProspects, filename);
+    if (result.success) {
+      toast.success(`Selected prospects exported successfully!`);
+    } else {
+      toast.error(result.message);
+    }
+  },
+
+  // 📊 Export single prospect to Excel
+  exportSingleProspect: (prospectId: string, filename?: string) => {
+    const { prospects } = get();
+    const prospect = prospects.find(p => p.id === prospectId);
+    if (!prospect) {
+      toast.error('Prospect not found');
+      return;
+    }
+    const result = exportSingleProspectToExcel(prospect, filename);
+    if (result.success) {
+      toast.success(`Prospect ${prospect.fullName || 'Unknown'} exported successfully!`);
+    } else {
+      toast.error(result.message);
+    }
+  },
+
+  // 📊 Export prospects with custom columns
+  exportProspectsWithColumns: (columns: (keyof Prospect)[], filename?: string) => {
+    const { prospects } = get();
+    const result = exportProspectsWithColumns(prospects, columns, filename);
+    if (result.success) {
+      toast.success(`Prospects exported successfully!`);
+    } else {
+      toast.error(result.message);
     }
   },
 }));

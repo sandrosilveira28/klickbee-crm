@@ -90,7 +90,7 @@ export default function Customers () {
   const [editCustomer, setEditCustomer] = React.useState<Customer | null>(null)
   const [showEditModal, setShowEditModal] = React.useState(false)
 
-  const { customers, fetchCustomers, loading, deleteCustomer } = useCustomersStore();
+  const { customers, fetchCustomers, loading, deleteCustomer, exportSingleCustomer } = useCustomersStore();
 
   useEffect(() => {
     fetchCustomers();
@@ -137,8 +137,7 @@ export default function Customers () {
                     console.log('Add notes for customer:', id);
                   }}
                   onExport={(id: string) => {
-                    // Handle export logic here
-                    console.log('Export customer:', id);
+                    exportSingleCustomer(id);
                   }}
                 />
             </div>

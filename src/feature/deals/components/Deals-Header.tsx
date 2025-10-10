@@ -8,6 +8,7 @@ import { filterData, type FilterData } from "@/feature/deals/libs/filterData"
 import DealModal from "./DealModal"
 import { useSearchParams } from "next/navigation"
 import { Deal } from '../types'
+import { useDealStore } from "../stores/useDealStore"
 
 type DealsHeaderProps = {
   view: 'table' | 'grid';
@@ -23,6 +24,9 @@ export function DealsHeader({ view, setView }: DealsHeaderProps) {
   const [editDeal, setEditDeal] = useState<Deal | null>(null);
   const [closedDate, setClosedDate] = useState<Date | null>(null);
   const searchParams = useSearchParams()
+  
+  // Get export function from store
+  const { exportAllDeals } = useDealStore();
 
   useEffect(() => {
     const newParam = searchParams.get("new")
@@ -39,6 +43,10 @@ export function DealsHeader({ view, setView }: DealsHeaderProps) {
   const handleCloseModal = () => {
     setShowNewDealer(false);
     setEditDeal(null);
+  };
+
+  const handleExportDeals = () => {
+    exportAllDeals();
   };
 
   // ✅ Toggle checkbox
@@ -123,7 +131,8 @@ export function DealsHeader({ view, setView }: DealsHeaderProps) {
 
         {/* Export */}
         <Button
-          leadingIcon={<img src="\icons\File.svg" alt="export-file" className="w-[17px] h-4 "/>} 
+          leadingIcon={<img src="\icons\File.svg" alt="export-file" className="w-[17px] h-4 "/>}
+          onClick={handleExportDeals}
            >
           Export
         </Button>

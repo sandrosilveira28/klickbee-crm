@@ -85,7 +85,7 @@ export default function Companies () {
   const [editCompany, setEditCompany] = React.useState<Company | null>(null)
   const [showEditModal, setShowEditModal] = React.useState(false)
 
-  const { companies, fetchCompanies, loading, deleteCompany } = useCompaniesStore();
+  const { companies, fetchCompanies, loading, deleteCompany, exportSingleCompany } = useCompaniesStore();
 
   useEffect(() => {
     fetchCompanies();
@@ -132,8 +132,7 @@ export default function Companies () {
             console.log('Add notes for company:', id);
           }}
           onExport={(id: string) => {
-            // Handle export logic here
-            console.log('Export company:', id);
+            exportSingleCompany(id);
           }}
         />
       </div>

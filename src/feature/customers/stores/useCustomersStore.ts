@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import toast from "react-hot-toast";
 import { Customer } from "../types/types";
-
+import { exportCustomersToExcel, exportCustomersWithColumns, exportSingleCustomerToExcel } from "../libs/excelExport";
 interface CustomerStore {
   customers: Customer[];
   loading: boolean;
@@ -11,6 +11,10 @@ interface CustomerStore {
   addCustomer: (customer: Omit<Customer, "id" | "ownerId" | "createdAt">) => Promise<void>;
   updateCustomer: (id: string, customer: Partial<Customer>) => Promise<void>;
   deleteCustomer: (id: string) => Promise<void>;
+  exportAllCustomers: (filename?: string) => void;
+  exportSelectedCustomers: (customerIds: string[], filename?: string) => void;
+  exportSingleCustomer: (customerId: string, filename?: string) => void;
+  exportCustomersWithColumns: (columns: (keyof Customer)[], filename?: string) => void;
 }
 
 export const useCustomersStore = create<CustomerStore>((set, get) => ({
@@ -101,6 +105,60 @@ export const useCustomersStore = create<CustomerStore>((set, get) => ({
       console.error("deleteCustomer error:", err);
       toast.error(err.message);
       set({ error: err.message });
+    }
+  },
+
+ // 📊 Export all customers to Excel
+  exportAllCustomers: (filename?: string) => {
+    const { customers } = get();
+    const result = exportCustomersToExcel(customers, filename);
+    if (result.success) {
+      toast.success(`Customers exported successfully!`);
+    } else {
+      toast.error(result.message);
+    }
+  },
+
+  // 📊 Export selected customers to Excel
+  exportSelectedCustomers: (customerIds: string[], filename?: string) => {
+    const { customers } = get();
+    const selectedCustomers = customers.filter(customer => customerIds.includes(customer.id));
+    if (selectedCustomers.length === 0) {
+      toast.error('No customers selected for export');
+      return;
+    }
+    const result = exportCustomersToExcel(selectedCustomers, filename);
+    if (result.success) {
+      toast.success(`Selected customers exported successfully!`);
+    } else {
+      toast.error(result.message);
+    }
+  },
+
+  // 📊 Export single customer to Excel
+  exportSingleCustomer: (customerId: string, filename?: string) => {
+    const { customers } = get();
+    const customer = customers.find(c => c.id === customerId);
+    if (!customer) {
+      toast.error('Customer not found');
+      return;
+    }
+    const result = exportSingleCustomerToExcel(customer, filename);
+    if (result.success) {
+      toast.success(`Customer ${customer.fullName} exported successfully!`);
+    } else {
+      toast.error(result.message);
+    }
+  },
+
+  // 📊 Export customers with custom columns
+  exportCustomersWithColumns: (columns: (keyof Customer)[], filename?: string) => {
+    const { customers } = get();
+    const result = exportCustomersWithColumns(customers, columns, filename);
+    if (result.success) {
+      toast.success(`Customers exported successfully!`);
+    } else {
+      toast.error(result.message);
     }
   },
 }));

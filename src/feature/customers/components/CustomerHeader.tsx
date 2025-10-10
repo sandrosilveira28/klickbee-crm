@@ -8,6 +8,7 @@ import { filterData, type FilterData } from "../libs/fillterData"
 import CustomerModal from "./CustomersModel"
 import { useSearchParams } from "next/navigation"
 import { Customer } from "../types/types"
+import { useCustomersStore } from "../stores/useCustomersStore"
 
 
 const statusOptions = [
@@ -32,7 +33,10 @@ export function CustomerHeader({ editCustomer, showEditModal, onEditCustomer, on
 
   const [searchQueries, setSearchQueries] = useState<Record<string, string>>({});
   const [showNewCustomers, setShowNewCustomers] = useState<boolean>(false);
-      const searchParams = useSearchParams()
+  const searchParams = useSearchParams()
+  
+  // Get export function from store
+  const { exportAllCustomers } = useCustomersStore();
       
        useEffect(() => {
           const newParam = searchParams.get("new")
@@ -46,6 +50,10 @@ export function CustomerHeader({ editCustomer, showEditModal, onEditCustomer, on
     if (onCloseEditModal) {
       onCloseEditModal();
     }
+  };
+
+  const handleExportCustomers = () => {
+    exportAllCustomers();
   };
 
   const handleToggle = (category: keyof FilterData, id: string) => {
@@ -112,6 +120,7 @@ export function CustomerHeader({ editCustomer, showEditModal, onEditCustomer, on
         {/* Export */}
         <Button
           leadingIcon={<img src="\icons\File.svg" alt="export-file" className="w-[17px] h-4 " />}
+          onClick={handleExportCustomers}
         >
           Export
         </Button>

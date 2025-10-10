@@ -39,7 +39,7 @@ const Deals = () => {
   const [showModal, setShowModal] = React.useState<boolean>(false);
   const [editDeal, setEditDeal] = React.useState<Deal | null>(null);
 
-    const { deals, fetchDeals, loading ,deleteDeal } = useDealStore();
+    const { deals, fetchDeals, loading, deleteDeal, exportSingleDeal } = useDealStore();
 
   useEffect(() => {
     fetchDeals();
@@ -82,7 +82,9 @@ const Deals = () => {
         }}
               onEdit={handleEditDeal}
               onAddNotes={() => {}}
-              onExport={() => {}}
+              onExport={(id: string) => {
+                exportSingleDeal(id);
+              }}
             />
           </>
         ) : (

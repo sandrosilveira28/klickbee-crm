@@ -7,6 +7,7 @@ import Filter from "@/components/filter"
 import { filterData, type FilterData } from "../libs/filterData"
 import ProspectModel from './ProspectModel'
 import { Prospect } from "../types/types"
+import { useProspectsStore } from "../stores/useProspectsStore"
 
 
 
@@ -25,6 +26,9 @@ export function ProspectHeader() {
       const [searchQueries, setSearchQueries] = useState<Record<string, string>>({});
         const [showNewProspect, setShowNewProspect] = useState<boolean>(false);
   const [editProspect, setEditProspect] = useState<Prospect | null>(null);
+  
+  // Get export function from store
+  const { exportAllProspects } = useProspectsStore();
 
        const handleEditDeal = (prospect: Prospect) => {
          setEditProspect(prospect);
@@ -35,6 +39,10 @@ export function ProspectHeader() {
          setShowNewProspect(false);
          setEditProspect(null);
        };
+
+  const handleExportProspects = () => {
+    exportAllProspects();
+  };
   
   const handleToggle = (category: keyof FilterData, id: string) => {
       setFilters((prev) => ({
@@ -100,7 +108,8 @@ export function ProspectHeader() {
       <div className="flex w-auto h-[36px] items-center gap-2">
         {/* Export */}
          <Button
-          leadingIcon={<img src="\icons\File.svg" alt="export-file" className="w-[17px] h-4 "/>} 
+          leadingIcon={<img src="\icons\File.svg" alt="export-file" className="w-[17px] h-4 "/>}
+          onClick={handleExportProspects}
            >
           Export
         </Button>

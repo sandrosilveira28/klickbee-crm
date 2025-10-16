@@ -32,8 +32,9 @@ model User {
 
 enum DealStage {
   New
-  Qualified
+  Contacted
   Proposal
+  Negotiation
   Won
   Lost
 }

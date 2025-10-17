@@ -4,6 +4,8 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/feature/auth/lib/auth";
 import { prisma } from "@/libs/prisma";
 import { createTodoSchema, updateTodoSchema } from "../schema/todoSchema";
+import { ActivityAction } from "@prisma/client";
+import { withActivityLogging } from "@/libs/apiUtils";
 
 export async function POST(req: Request) {
   try {
@@ -25,22 +27,44 @@ export async function POST(req: Request) {
       );
     }
 
-    const data = parsed.data as any;
+    const parsedData = parsed.data as any;
+    const data = {
+      taskName: parsedData.taskName,
+      linkedTo: { connect: { id: parsedData.linkedId } },
+      assignedTo: parsedData.assignedId ? { connect: { id: parsedData.assignedId } } : undefined,
+      owner: { connect: { id: session.user.id } },
+      status: parsedData.status,
+      priority: parsedData.priority,
+      dueDate: parsedData.dueDate ? new Date(parsedData.dueDate) : null,
+      notes: parsedData.notes ?? null,
+      files: parsedData.files ?? undefined,
+    };
 
-    const created = await prisma.todo.create({
-      data: {
-        taskName: data.taskName,
-        linkedTo: { connect: { id: data.linkedId } },
-        assignedTo: data.assignedId ? { connect: { id: data.assignedId } } : undefined,
-        owner: { connect: { id: session.user.id } },
-        status: data.status,
-        priority: data.priority,
-        dueDate: data.dueDate ? new Date(data.dueDate) : null,
-        notes: data.notes ?? null,
-        files: data.files ?? undefined,
+    // const created = await prisma.todo.create
+    const created = await withActivityLogging(
+      async () => {
+        return await prisma.todo.create({
+          data,
+          include: {
+            owner: true,
+            linkedTo: true,
+            assignedTo: true,
+          },
+        });
       },
-    });
-
+      {
+        entityType: 'Todo',
+        entityId: '',
+        action: ActivityAction.Create,
+        userId: session.user.id,
+        getCurrentData: async (result: any) => {
+          return result;
+        },
+        metadata: {
+          createdFields: Object.keys(data),
+        },
+      }
+    );
     return NextResponse.json(created, { status: 201 });
   } catch (err) {
     console.error("POST /todos error", err);
@@ -64,7 +88,7 @@ export async function GET(req: Request) {
     };
     const todos = await prisma.todo.findMany({
       where,
-      include:{linkedTo: true, assignedTo: true},
+      include:{linkedTo: true, assignedTo: true, owner: true},
       orderBy: { createdAt: "desc" },
       take: Math.min(limit, 200),
     });
@@ -106,23 +130,48 @@ export async function handleMethodWithId(req: Request, id: string) {
         );
       }
 
-      const data = parsed.data as any;
+      const parsedData = parsed.data as any;
+      const data = {
+          taskName: parsedData.taskName,
+          linkedTo: parsedData.linkedId ? { connect: { id: parsedData.linkedId } } : undefined,
+          assignedTo: parsedData.assignedId ? { connect: { id: parsedData.assignedId } } : undefined,
+          status: parsedData.status,
+          priority: parsedData.priority,
+          dueDate: parsedData.dueDate ? new Date(parsedData.dueDate) : undefined,
+          notes: parsedData.notes ?? undefined,
+          files: parsedData.files ?? undefined,
+        };
 
-      const updated = await prisma.todo.update({
-        where: { id },
-        data: {
-          taskName: data.taskName,
-          linkedTo: data.linkedId ? { connect: { id: data.linkedId } } : undefined,
-          assignedTo: data.assignedId ? { connect: { id: data.assignedId } } : undefined,
-          status: data.status,
-          priority: data.priority,
-          dueDate: data.dueDate ? new Date(data.dueDate) : undefined,
-          notes: data.notes ?? undefined,
-          files: data.files ?? undefined,
+      const getPreviousData = async () => {
+        const todo = await prisma.todo.findUnique({
+          where: { id: id },
+        });
+        return todo;
+      };
+      console.log(await getPreviousData())
+      const updatedTodo = await withActivityLogging(
+        async () => {
+          return await prisma.todo.update({
+            where: { id: id },
+            data,
+          });
         },
-      });
+        {
+          entityType: 'Todo',
+          entityId: id,
+          action: ActivityAction.Update,
+          userId: session.user.id,
+          getPreviousData,
+          getCurrentData: async (result: any) => {
+            return result;
+          },
+          metadata: {
+            updatedFields: Object.keys(data),
+          },
+        }
+      );
 
-      return NextResponse.json(updated);
+      return NextResponse.json(updatedTodo);
     }
 
     if (method === "DELETE") {
@@ -130,7 +179,29 @@ export async function handleMethodWithId(req: Request, id: string) {
       if (!session?.user?.id)
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-      await prisma.todo.delete({ where: { id } });
+      const getPreviousData = async () => {
+        return await prisma.todo.findUnique({
+          where: { id },
+        });
+      };
+            
+      const deletedTodo = await withActivityLogging(
+        async () => {
+          return await prisma.todo.delete({
+            where: { id },
+          });
+        },
+        {
+          entityType: 'Todo',
+          entityId: id,
+          action: ActivityAction.Delete,
+          userId: session.user.id,
+          getPreviousData,
+          metadata: {
+            deletedAt: new Date().toISOString(),
+          },
+        }
+      );
       return NextResponse.json({ success: true });
     }
 

@@ -153,28 +153,6 @@ export async function handleMethodWithId(req: Request, id: string) {
           files: parsedData.files ?? undefined,
         }
 
-<<<<<<< HEAD
-      const updated = await prisma.deal.update({
-        where: { id },
-        data: {
-          dealName: data.dealName,
-          companyId: data.companyId,
-          contactId: data.contactId ,
-          stage: data.stage,
-          amount: data.amount,
-          currency: data.currency,
-          closeDate: data.closeDate ? new Date(data.closeDate) : undefined,
-          tags: data.tags ?? undefined,
-          notes: data.notes ?? undefined,
-          files: data.files ?? undefined,
-        },
-        include: {
-          owner: true,
-          company: true,
-          contact: true,
-        },
-      });
-=======
       const getPreviousData = async () => {
             const deal = await prisma.deal.findUnique({
               where: { id: id },
@@ -203,7 +181,6 @@ export async function handleMethodWithId(req: Request, id: string) {
           },
         }
       );
->>>>>>> 588783a2718adb530fc8442e9419f642ac406ab9
 
       return NextResponse.json(updatedDeal);
     }

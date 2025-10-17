@@ -183,7 +183,8 @@ const DetailModal: React.FC<DetailModalProps> = ({
             {onDelete && (
               <Button
                 onClick={onDelete}
-                className="p-1 text-sm font-medium rounded-lg text-red-500 border border-red-500"
+                disabled={isDeleting}
+                className="p-1 text-sm font-medium rounded-lg text-red-500 border border-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isDeleting ? (
                   <Loader className="animate-spin" size={15} />
@@ -196,7 +197,8 @@ const DetailModal: React.FC<DetailModalProps> = ({
                 {onExport && (
                 <Button
                   onClick={onExport}
-                  className="px-4 py-2 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-50"
+                  disabled={isExporting}
+                  className="px-4 py-2 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isExporting ? (
                     <Loader className="animate-spin" size={15} />

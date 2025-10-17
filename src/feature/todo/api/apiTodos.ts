@@ -40,6 +40,7 @@ export async function POST(req: Request) {
         notes: data.notes ?? null,
         files: data.files ?? undefined,
       },
+      include:{linkedTo: true, assignedTo: true},
     });
 
     return NextResponse.json(created, { status: 201 });
@@ -86,7 +87,7 @@ export async function handleMethodWithId(req: Request, id: string) {
     const method = req.method?.toUpperCase();
 
     if (method === "GET") {
-      const todo = await prisma.todo.findUnique({ where: { id } });
+      const todo = await prisma.todo.findUnique({ where: { id }, include: { linkedTo: true, assignedTo: true } });
       if (!todo) return NextResponse.json({ error: "Not found" }, { status: 404 });
       return NextResponse.json(todo);
     }
@@ -121,6 +122,7 @@ export async function handleMethodWithId(req: Request, id: string) {
           notes: data.notes ?? undefined,
           files: data.files ?? undefined,
         },
+        include: { linkedTo: true, assignedTo: true },
       });
 
       return NextResponse.json(updated);

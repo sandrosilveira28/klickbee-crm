@@ -146,19 +146,20 @@ export const CalendarDropDown: React.FC<CalendarDropDownProps> = ({
   // 1) Leading cells from previous month
   for (let i = 0; i < leading; i++) {
     const day = prevMonthDays - leading + i + 1
-    cells.push({ date: new Date(prevYear, prevMonth, day), inCurrent: false })
+    cells.push({ date: new Date(prevYear, prevMonth, day, 12, 0, 0), inCurrent: false })
   }
 
   // 2) Current month cells (clip if month overflows 35 cells)
   const currentLimit = Math.max(0, Math.min(daysInMonth, TOTAL_CELLS - cells.length))
   for (let d = 1; d <= currentLimit; d++) {
-    cells.push({ date: new Date(viewYear, viewMonth, d), inCurrent: true })
+    // Use noon time to avoid timezone issues
+    cells.push({ date: new Date(viewYear, viewMonth, d, 12, 0, 0), inCurrent: true })
   }
 
   // 3) Trailing cells from next month to fill up to 35
   let nextCounter = 1
   while (cells.length < TOTAL_CELLS) {
-    cells.push({ date: new Date(nextYear, nextMonth, nextCounter++), inCurrent: false })
+    cells.push({ date: new Date(nextYear, nextMonth, nextCounter++, 12, 0, 0), inCurrent: false })
   }
 
   // Chunk into 5 weeks

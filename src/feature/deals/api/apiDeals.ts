@@ -126,7 +126,7 @@ export async function handleMethodWithId(req: Request, id: string) {
         data: {
           dealName: data.dealName,
           companyId: data.companyId,
-          contactId: data.contactId ?? undefined,
+          contactId: data.contactId ,
           stage: data.stage,
           amount: data.amount,
           currency: data.currency,
@@ -134,6 +134,11 @@ export async function handleMethodWithId(req: Request, id: string) {
           tags: data.tags ?? undefined,
           notes: data.notes ?? undefined,
           files: data.files ?? undefined,
+        },
+        include: {
+          owner: true,
+          company: true,
+          contact: true,
         },
       });
 

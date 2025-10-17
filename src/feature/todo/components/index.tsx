@@ -25,8 +25,10 @@ const taskColumns: TableColumn<TaskData>[] = [
     dataIndex: 'linkedTo',
     sortable: false,
     render: (linkedTo) => {
+      if (!linkedTo) return '-';
+      const displayName = typeof linkedTo === 'object' ? linkedTo.name || linkedTo.email : linkedTo;
       return (
-        <div>{linkedTo?.name}</div>
+        <div>{displayName || 'Unknown'}</div>
       )
     }
   },
@@ -37,8 +39,11 @@ const taskColumns: TableColumn<TaskData>[] = [
     sortable: false,
     avatar: { srcIndex: 'assignedImage', altIndex: 'assignedTo', size: 32 },
     render: (assignedTo) => {
+      if (!assignedTo) return '-';
+      // Handle both object and string cases
+      const displayName = typeof assignedTo === 'object' ? assignedTo.name : assignedTo;
       return (
-        <div>{assignedTo?.name}</div>
+        <div>{displayName || 'Unknown'}</div>
       )
     }
   },

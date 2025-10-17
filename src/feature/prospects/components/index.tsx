@@ -18,12 +18,12 @@ export const prospectsColumns: TableColumn<Prospect>[] = [
     dataIndex: 'fullName',
     sortable: true,
   },
-  {
-    key: 'company',
-    title: 'Company',
-    dataIndex: 'company',
-    sortable: false,
-  },
+    { key: 'company', title: 'Company', dataIndex: 'company', sortable: false, render: (company) => {
+      if (!company) return '-';
+      if (typeof company === 'string') return company;
+      if (typeof company === 'object' && company?.fullName) return company.fullName;
+      return 'Unknown Company';
+    } },
   {
     key: 'email',
     title: 'Email',
@@ -36,12 +36,12 @@ export const prospectsColumns: TableColumn<Prospect>[] = [
     dataIndex: 'phone',
     sortable: false,
   },
-  {
-    key: 'owner',
-    title: 'Owner',
-    dataIndex: 'owner',
-    avatar: { srcIndex: 'ownerAvatar', altIndex: 'owner', size: 32 },
-  },
+     { key: 'owner', title: 'Owner', dataIndex: 'owner', sortable: false, render: (owner, record) => {
+      if (!owner) return 'Unassigned';
+      if (typeof owner === 'string') return owner;
+      if (typeof owner === 'object' && owner?.name) return owner.name;
+      return 'Unknown';
+    }, avatar: { srcIndex: 'ownerImage', altIndex: 'owner', size: 32 } },
   {
     key: 'status',
     title: 'Status',

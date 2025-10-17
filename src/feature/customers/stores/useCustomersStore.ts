@@ -125,7 +125,7 @@ export const useCustomersStore = create<CustomerStore>((set, get) => ({
     const activeTags = filters.tags.filter((t: any) => t.checked && t.id !== "all");
     if (activeTags.length > 0) {
       filtered = filtered.filter((customer: Customer) => {
-        const tags = (customer.tags || []).map((t) => t.toLowerCase());
+        const tags = (customer.tags || []).filter((t): t is string => typeof t === 'string').map((t) => t.toLowerCase());
         return activeTags.some((f: any) => tags.includes(f.label.toLowerCase()));
       });
     }

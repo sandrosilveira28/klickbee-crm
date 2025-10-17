@@ -30,10 +30,38 @@ const Deals = () => {
 
   const columns: TableColumn<Deal>[] = [
     { key: 'dealName', title: 'Deal Name', dataIndex: 'dealName', sortable: true },
-    { key: 'company', title: 'Company', dataIndex: 'company', sortable: false },
-    { key: 'contact', title: 'Contact', dataIndex: 'contact', sortable: false },
+    { key: 'company', title: 'Company', dataIndex: 'company', sortable: false, render: (company) => {
+      if (!company) return '-';
+      if (typeof company === 'string') return company;
+      if (typeof company === 'object' && company?.fullName) return company.fullName;
+      return 'Unknown Company';
+    } },
+    { key: 'contact', title: 'Contact', dataIndex: 'contact', sortable: false, render: (contact) => {
+      if (!contact) return '-';
+      if (typeof contact === 'string') return contact;
+      if (typeof contact === 'object' && contact?.fullName) return contact.fullName;
+      return 'Unknown Contact';
+    } },
     { key: 'stage', title: 'Stage', dataIndex: 'stage', sortable: false, render: (stage) => <Badge variant={stage as any}>{stage === 'Proposal' ? 'Proposal Sent' : stage}</Badge> },
-    { key: 'amount', title: 'Amount', dataIndex: 'amount', sortable: false, render: (amount, record) => `$${(amount as number).toLocaleString()}` },
+    { key: 'amount', title: 'Amount', dataIndex: 'amount', sortable: false, render: (amount, record) => {
+      if (!amount) return '-';
+
+      const currency = (record as any).currency || 'USD';
+      const numAmount = amount as number;
+
+      // Show appropriate currency symbol
+      const getCurrencySymbol = (curr: string) => {
+        switch (curr?.toUpperCase()) {
+          case 'EUR': return '€';
+          case 'GBP': return '£';
+          case 'USD':
+          default: return '$';
+        }
+      };
+
+      const symbol = getCurrencySymbol(currency);
+      return `${symbol}${numAmount.toLocaleString()}`;
+    } },
     { key: 'owner', title: 'Owner', dataIndex: 'owner', sortable: false, render: (owner, record) => {
       if (!owner) return 'Unassigned';
       if (typeof owner === 'string') return owner;

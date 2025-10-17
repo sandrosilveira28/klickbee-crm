@@ -53,7 +53,9 @@ const handleMove = React.useCallback(async  ({ itemId, fromKey, toKey }: { itemI
   const stageLabelMap: Record<string, string> = {
     New: "Early Stage",
     Proposal: "In Progress",
-    Contacted: "In Progress",
+    Negotiation: "In Progress",
+    Contacted: "Early Stage",
+
     Won: "Won",
     Lost: "Lost",
   };
@@ -104,10 +106,10 @@ const handleMove = React.useCallback(async  ({ itemId, fromKey, toKey }: { itemI
         groupBy={(d: Deal) => {
           switch (d.stage) {
             case "New":
+            case "Contacted":
               return "early-stage"
                           case "Proposal":
-
-            case "Contacted":
+            case "Negotiation":
               return "in-progress"
             case "Won":
               return "won"
@@ -219,6 +221,7 @@ function toStageFromColumn(columnKey: string, currentStage: Deal["stage"]): Deal
       // Decide intelligently what "in-progress" means
       if (currentStage === "New") return "Proposal"; // move up
       if (currentStage === "Proposal") return "Proposal";
+      if (currentStage === "Negotiation") return "Negotiation";
       if (currentStage === "Contacted") return "Contacted";
       return "Proposal"; // default for unknown cases
 

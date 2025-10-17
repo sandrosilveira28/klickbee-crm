@@ -7,15 +7,16 @@ import * as Yup from "yup"
 import { Button } from "@/components/ui/Button"
 import { Trash2, UploadCloud } from "lucide-react"
 import SearchableDropdown from "@/components/ui/SearchableDropdown"
-import { companyOptions, contactOptions } from "../libs/companyData"
 import TagInput from "@/components/ui/TagInput"
 import UploadButton from "@/components/ui/UploadButton"
-import { options } from '../libs/currencyOptions'
-import { useUserStore } from '@/feature/user/store/userStore';
+import { getCompanyOptions, getContactOptions } from "../libs/companyData";
+import { useCompaniesStore } from '@/feature/companies/stores/useCompaniesStore';
+import { useCustomersStore } from '@/feature/customers/stores/useCustomersStore';
 import InputWithDropDown from "@/components/ui/InputWithDropDown"
 import toast from "react-hot-toast"
 import { Deal } from '../types'
 import CalendarDropDown from "@/components/ui/CalendarDropDown"
+import { options } from "../libs/currencyOptions"
 
 type DealFormValues = {
   dealName: string
@@ -30,23 +31,6 @@ type DealFormValues = {
   notes: string
   files: any[]
 }
-
-const schema = Yup.object({
-    dealName: Yup.string().trim().required("Deal Name is required"),
-    company: Yup.string().trim().required("Company is required"),
-    contact: Yup.string().trim(),    stage: Yup.string().oneOf(["New", "Contacted",  "Proposal", "Negotiation",  "Won", "Lost"]).required("Stage is required"),
-
-    amount: Yup.number()
-        .typeError("Enter a valid number")
-        .min(0, "Amount cannot be negative")
-        .required("Amount is required"),
-    currency: Yup.string().oneOf(["USD", "EUR", "GBP"]).required("Currency is required"),
-    owner: Yup.string().trim().required("Owner is required"),
-    closeDate: Yup.string().nullable(),
-    tags: Yup.array().of(Yup.string().trim().min(1)).max(10, "Up to 10 tags"),
-    notes: Yup.string(),
-    files: Yup.array().of(Yup.mixed<File>()),
-})
 
 const initialValues: DealFormValues = {
     dealName: "",
@@ -80,6 +64,12 @@ export default function DealForm({
     const [tagInput, setTagInput] = useState("")
     const [uploading, setUploading] = useState(false);
     const [uploadedFiles, setUploadedFiles] = useState<any[]>([]);
+
+    // Fetch companies and customers data
+    useEffect(() => {
+        useCompaniesStore.getState().fetchCompanies();
+        useCustomersStore.getState().fetchCustomers();
+    }, []);
 
     // Fetch users for owner dropdown
   
@@ -130,14 +120,38 @@ export default function DealForm({
                 }
                 return '';
             })();
+
+            // Normalize company - extract ID if it's an object
+            const companyValue = (() => {
+                const c = (initialData as any).company;
+                if (typeof c === 'object' && c) {
+                    return c.id ?? '';
+                }
+                if (typeof c === 'string') {
+                    return c;
+                }
+                return '';
+            })();
+
+            // Normalize contact - extract ID if it's an object
+            const contactValue = (() => {
+                const c = (initialData as any).contact;
+                if (typeof c === 'object' && c) {
+                    return c.id ?? '';
+                }
+                if (typeof c === 'string') {
+                    return c;
+                }
+                return '';
+            })();
             const initialVals = {
                 dealName: initialData.dealName || '',
-                company: getOptionLabel(companyOptions, initialData.company),
-                contact: getOptionLabel(contactOptions, initialData.contact),
+                company: companyValue, // Keep as ID for SearchableDropdown
+                contact: contactValue, // Keep as ID for SearchableDropdown
                 stage: initialData.stage || 'New',
                 amount: initialData.amount || 0,
                 currency: 'EUR', // Default currency, you might want to store this in the deal data
-                owner: getOptionLabel(userOptions, ownerValue),
+                owner: ownerValue, // Keep as ID for SearchableDropdown
                 closeDate: initialData.closeDate
                     ? new Date(initialData.closeDate).toISOString().split('T')[0]
                     : '',
@@ -155,6 +169,24 @@ export default function DealForm({
         }
         return initialValues;
     };
+
+    // Dynamic schema with validation for select fields
+    const schema = Yup.object({
+        dealName: Yup.string().trim().required("Deal Name is required"),
+        company: Yup.string().trim().optional(),
+        contact: Yup.string().trim().optional(),
+        stage: Yup.string().oneOf(["New", "Contacted", "Proposal", "Negotiation", "Won", "Lost"]).required("Stage is required"),
+        amount: Yup.number()
+            .typeError("Enter a valid number")
+            .min(0, "Amount cannot be negative")
+            .required("Amount is required"),
+        currency: Yup.string().oneOf(["USD", "EUR", "GBP"]).required("Currency is required"),
+        owner: Yup.string().trim().required("Owner is required"),
+        closeDate: Yup.string().nullable(),
+        tags: Yup.array().of(Yup.string().trim().min(1)).max(10, "Up to 10 tags"),
+        notes: Yup.string(),
+        files: Yup.array().of(Yup.mixed<File>()),
+    });
 
     return (
         <Formik<DealFormValues>
@@ -210,7 +242,7 @@ export default function DealForm({
                             <SearchableDropdown
                                 name="company"
                                 value={values.company}
-                                options={companyOptions}
+                                options={getCompanyOptions()}
                                 onChange={(val) => setFieldValue("company", val)}
                                 placeholder="Search or create a company"
                             />
@@ -220,7 +252,7 @@ export default function DealForm({
                             <SearchableDropdown
                                 name="contact"
                                 value={values.contact}
-                                options={contactOptions}
+                                options={getContactOptions()}
                                 onChange={(val) => setFieldValue("contact", val)}
                                 placeholder="Add Contact"
                                 showIcon={false}

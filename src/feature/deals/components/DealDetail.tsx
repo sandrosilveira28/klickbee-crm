@@ -33,11 +33,34 @@ export default function DealDetail({
 }: DealDetailProps) {
   if (!deal) return null;
 
+  const getCompanyName = (company: any) => {
+    if (!company) return 'No Company';
+    if (typeof company === 'string') return company;
+    if (typeof company === 'object' && company?.fullName) return company.fullName;
+    return 'Unknown Company';
+  };
+
+  const getContactName = (contact: any) => {
+    if (!contact) return 'No Contact';
+    if (typeof contact === 'string') return contact;
+    if (typeof contact === 'object' && contact?.fullName) return contact.fullName;
+    return 'Unknown Contact';
+  };
+
+  const getCurrencySymbol = (currency?: string) => {
+    switch (currency?.toUpperCase()) {
+      case 'EUR': return '€';
+      case 'GBP': return '£';
+      case 'USD':
+      default: return '$';
+    }
+  };
+
   const details = [
-    { label: 'Company', value: deal.company },
-    { label: 'Contact', value: deal.contact },
+    { label: 'Company', value: getCompanyName(deal.company) },
+    { label: 'Contact', value: getContactName(deal.contact) },
     { label: 'Stage', value: (<Badge variant={deal.stage}>{deal.stage}</Badge>) },
-    { label: 'Amount', value: `$${deal.amount.toLocaleString()}` },
+    { label: 'Amount', value: `${getCurrencySymbol((deal as any).currency)}${deal.amount.toLocaleString()}` },
     {
       label: 'Owner',
       value: (

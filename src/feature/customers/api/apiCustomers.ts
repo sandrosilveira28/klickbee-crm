@@ -49,6 +49,7 @@ const data = {
           data,
           include: {
             owner: true,
+            company: true,
           },
         });
       },
@@ -152,6 +153,10 @@ export async function handleMethodWithId(req: Request, id: string) {
           return await prisma.customer.update({
             where: { id: id },
             data,
+            include: {
+              owner: true,
+              company: true,
+            },
           });
         },
         {

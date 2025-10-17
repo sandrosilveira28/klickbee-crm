@@ -18,6 +18,7 @@ export async function POST(req: Request) {
     const parsed = createTodoSchema.safeParse({
       ...raw,
       linkedId: session.user.id,
+      assignedId: raw?.assignedTo || session.user.id,
     });
 
     if (!parsed.success) {
@@ -27,44 +28,22 @@ export async function POST(req: Request) {
       );
     }
 
-    const parsedData = parsed.data as any;
-    const data = {
-      taskName: parsedData.taskName,
-      linkedTo: { connect: { id: parsedData.linkedId } },
-      assignedTo: parsedData.assignedId ? { connect: { id: parsedData.assignedId } } : undefined,
-      owner: { connect: { id: session.user.id } },
-      status: parsedData.status,
-      priority: parsedData.priority,
-      dueDate: parsedData.dueDate ? new Date(parsedData.dueDate) : null,
-      notes: parsedData.notes ?? null,
-      files: parsedData.files ?? undefined,
-    };
+    const data = parsed.data as any;
 
-    // const created = await prisma.todo.create
-    const created = await withActivityLogging(
-      async () => {
-        return await prisma.todo.create({
-          data,
-          include: {
-            owner: true,
-            linkedTo: true,
-            assignedTo: true,
-          },
-        });
+    const created = await prisma.todo.create({
+      data: {
+        taskName: data.taskName,
+        linkedTo: { connect: { id: data.linkedId } },
+        assignedTo: data.assignedId ? { connect: { id: data.assignedId } } : undefined,
+        owner: { connect: { id: session.user.id } },
+        status: data.status,
+        priority: data.priority,
+        dueDate: data.dueDate ? new Date(data.dueDate) : null,
+        notes: data.notes ?? null,
+        files: data.files ?? undefined,
       },
-      {
-        entityType: 'Todo',
-        entityId: '',
-        action: ActivityAction.Create,
-        userId: session.user.id,
-        getCurrentData: async (result: any) => {
-          return result;
-        },
-        metadata: {
-          createdFields: Object.keys(data),
-        },
-      }
-    );
+    });
+
     return NextResponse.json(created, { status: 201 });
   } catch (err) {
     console.error("POST /todos error", err);
@@ -109,7 +88,7 @@ export async function handleMethodWithId(req: Request, id: string) {
     const method = req.method?.toUpperCase();
 
     if (method === "GET") {
-      const todo = await prisma.todo.findUnique({ where: { id } });
+      const todo = await prisma.todo.findUnique({ where: { id }, include: { linkedTo: true, assignedTo: true } });
       if (!todo) return NextResponse.json({ error: "Not found" }, { status: 404 });
       return NextResponse.json(todo);
     }
@@ -130,48 +109,23 @@ export async function handleMethodWithId(req: Request, id: string) {
         );
       }
 
-      const parsedData = parsed.data as any;
-      const data = {
-          taskName: parsedData.taskName,
-          linkedTo: parsedData.linkedId ? { connect: { id: parsedData.linkedId } } : undefined,
-          assignedTo: parsedData.assignedId ? { connect: { id: parsedData.assignedId } } : undefined,
-          status: parsedData.status,
-          priority: parsedData.priority,
-          dueDate: parsedData.dueDate ? new Date(parsedData.dueDate) : undefined,
-          notes: parsedData.notes ?? undefined,
-          files: parsedData.files ?? undefined,
-        };
+      const data = parsed.data as any;
 
-      const getPreviousData = async () => {
-        const todo = await prisma.todo.findUnique({
-          where: { id: id },
-        });
-        return todo;
-      };
-      console.log(await getPreviousData())
-      const updatedTodo = await withActivityLogging(
-        async () => {
-          return await prisma.todo.update({
-            where: { id: id },
-            data,
-          });
+      const updated = await prisma.todo.update({
+        where: { id },
+        data: {
+          taskName: data.taskName,
+          linkedTo: data.linkedId ? { connect: { id: data.linkedId } } : undefined,
+          assignedTo: data.assignedId ? { connect: { id: data.assignedId } } : undefined,
+          status: data.status,
+          priority: data.priority,
+          dueDate: data.dueDate ? new Date(data.dueDate) : undefined,
+          notes: data.notes ?? undefined,
+          files: data.files ?? undefined,
         },
-        {
-          entityType: 'Todo',
-          entityId: id,
-          action: ActivityAction.Update,
-          userId: session.user.id,
-          getPreviousData,
-          getCurrentData: async (result: any) => {
-            return result;
-          },
-          metadata: {
-            updatedFields: Object.keys(data),
-          },
-        }
-      );
+      });
 
-      return NextResponse.json(updatedTodo);
+      return NextResponse.json(updated);
     }
 
     if (method === "DELETE") {

@@ -28,12 +28,14 @@ model User {
   customersOwner   Customer[] @relation("customer_owner")
   companiesByUser  Company[]  @relation("company_user")
   companiesByOwner Company[]  @relation("company_owner")
+  activityLogs     ActivityLog[]
 }
 
 enum DealStage {
   New
-  Qualified
+  Contacted
   Proposal
+  Negotiation
   Won
   Lost
 }
@@ -121,6 +123,12 @@ enum MeetingEnds {
   OnDate
 }
 
+enum ActivityAction {
+  Create
+  Update
+  Delete
+}
+
 model Meeting {
   id            String           @id @default(uuid())
   title         String
@@ -144,6 +152,7 @@ model Meeting {
   files         Json?
   ownerId       String
   owner         User             @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  link          String?
   createdAt     DateTime         @default(now())
   updatedAt     DateTime         @updatedAt
 
@@ -241,4 +250,21 @@ model Company {
 
   @@index([ownerId])
   @@index([userId])
+}
+
+model ActivityLog {
+  id             String          @id @default(uuid())
+  entityType     String
+  entityId       String
+  action         ActivityAction
+  changedFields  String[]        @default([])
+  previousValues Json?
+  newValues      Json?
+  metadata       Json?
+  performedById  String
+  performedBy    User            @relation(fields: [performedById], references: [id], onDelete: Cascade)
+  createdAt      DateTime        @default(now())
+
+  @@index([entityType, entityId])
+  @@index([performedById])
 }

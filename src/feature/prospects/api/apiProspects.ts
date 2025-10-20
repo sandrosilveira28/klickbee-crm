@@ -5,7 +5,7 @@ import { authOptions } from "@/feature/auth/lib/auth";
 import { prisma } from "@/libs/prisma";
 import { createProspectSchema, updateProspectSchema } from "../schema/prospectSchema";
 import { withActivityLogging } from "@/libs/apiUtils";
-import { ActivityAction } from "@prisma/client";
+import { ActivityAction, Prisma } from "@prisma/client";
 
 export async function POST(req: Request) {
   try {
@@ -80,13 +80,22 @@ export async function GET(req: Request) {
     const ownerId = url.searchParams.get("ownerId");
 
     const companyId = url.searchParams.get("companyId");
+    const search = url.searchParams.get("search");
 
 
 
       const where = {
       ...(ownerId ? { ownerId } : {}),
       ...(companyId ? { companyId } : {}),
-    };
+      ...(search
+              ? {
+                    fullName: {
+                    contains: search,
+                    mode: Prisma.QueryMode.insensitive,
+                  },
+                }
+              : {}),
+      };
     const prospects = await prisma.prospect.findMany({
       where,
       include: {
@@ -121,7 +130,7 @@ export async function handleMethodWithId(req: Request, id: string) {
       }
 
       const body = await req.json();
-      const parsed = updateProspectSchema.safeParse({ ...body, id, ownerId: body.owner.id });
+      const parsed = updateProspectSchema.safeParse({ ...body, id, ownerId: body.owner });
       if (!parsed.success) {
         return NextResponse.json(
           { error: "Validation error", details: parsed.error.flatten() },

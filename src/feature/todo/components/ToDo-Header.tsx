@@ -62,6 +62,7 @@ export function TodoHeader({ view, setView, selectedTodos = [], selectedTodoRows
   const [priorityOptionsUser, setpriorityOptionsUser] = useState<string>(getSelectedPriority())
     const [showNewTask, setShowNewTask] = useState<boolean>(false);
       const searchParams = useSearchParams()
+      const setSearchTerm = useTodoStore((state) => state.setSearchTerm);
       // Date filter state
       const [dueDate, setDueDate] = useState<Date | null>(new Date())
       const dateLabel = dueDate
@@ -161,6 +162,7 @@ export function TodoHeader({ view, setView, selectedTodos = [], selectedTodoRows
               bg-card border border-[var(--border-gray)] rounded-md
               text-sm outline-none shadow-sm
             "
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
 

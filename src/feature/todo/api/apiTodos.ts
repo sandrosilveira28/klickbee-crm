@@ -4,7 +4,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/feature/auth/lib/auth";
 import { prisma } from "@/libs/prisma";
 import { createTodoSchema, updateTodoSchema } from "../schema/todoSchema";
-import { ActivityAction } from "@prisma/client";
+import { ActivityAction, Prisma } from "@prisma/client";
 import { withActivityLogging } from "@/libs/apiUtils";
 
 export async function POST(req: Request) {
@@ -81,10 +81,19 @@ export async function GET(req: Request) {
     const limit = Number(url.searchParams.get("limit") ?? 50);
     const linkedId = url.searchParams.get("linkedId");
     const assignedId = url.searchParams.get("assignedId");
+    const search = url.searchParams.get("search");
 
     const where = {
       ...(linkedId ? { linkedId } : {}),
       ...(assignedId ? { assignedId } : {}),
+       ...(search
+              ? {
+                    taskName: {
+                    contains: search,
+                    mode: Prisma.QueryMode.insensitive,
+                  },
+                }
+              : {}),
     };
     const todos = await prisma.todo.findMany({
       where,

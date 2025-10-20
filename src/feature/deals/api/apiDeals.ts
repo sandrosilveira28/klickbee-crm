@@ -139,7 +139,7 @@ export async function handleMethodWithId(req: Request, id: string) {
       const body = await req.json();
 
       // ✅ validate with zod
-      const parsed = updateDealSchema.safeParse({ ...body, id, ownerId: body.owner.id });
+      const parsed = updateDealSchema.safeParse({ ...body, id, ownerId: body.owner });
       if (!parsed.success) {
         return NextResponse.json(
           { error: "Validation error", details: parsed.error.flatten() },

@@ -16,6 +16,7 @@ interface DealStore {
   closedDateFilter: Date | null;
 
   fetchDeals: (ownerId?: string) => Promise<void>;
+  setSearchTerm (search: string): void;
   setFilters: (filters: FilterData) => void;
   applyFilters: () => void;
   resetFilters: () => void;
@@ -188,6 +189,15 @@ export const useDealStore = create<DealStore>((set, get) => ({
       console.log('User not found:', userId);
     }
   },
+
+  setSearchTerm: (search: string) => {
+  const { deals } = get();
+  const filtered = deals.filter((d) =>
+    d.dealName?.toLowerCase().includes(search.toLowerCase())
+  );
+  set({ filteredDeals: filtered });
+},
+
   fetchDeals: async (ownerId?: string) => {
     set({ loading: true });
     try {

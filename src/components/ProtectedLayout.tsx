@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import SideBar from "./layout/SideBar"
 import NavBar from "./layout/NavBar"
 
@@ -10,17 +10,19 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
     const { status } = useSession()
     const [isAuthenticated, setIsAuthenticated] = useState(false)
     const router = useRouter()
+    const pathname = usePathname()
 
     useEffect(() => {
-        if (status === "unauthenticated" && window.location.pathname !== "/auth" && window.location.pathname !== "/verify") {
+        if (status === "unauthenticated" && pathname !== "/auth" && pathname !== "/verify") {
             router.push("/auth")
             setIsAuthenticated(false)
-        }else if (status === "authenticated") {
+        } else if (status === "authenticated") {
             setIsAuthenticated(true)
         }
-    }, [status])
+    }, [status, pathname, router])
 
-    if (status === "loading") {
+    // Show loading while session is loading OR when unauthenticated on protected route
+    if (status === "loading" || (status === "unauthenticated" && pathname !== "/auth" && pathname !== "/verify")) {
         return (
             <div className="flex items-center justify-center min-h-screen bg-gray-50">
                 <div className="flex space-x-1">
@@ -34,21 +36,21 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
 
     return (
         <>
-        {
-            isAuthenticated ? 
-                <div className="flex h-[100dvh]">
-                    {/* Sidebar */}
-                    <SideBar />
-                    {/* Main content */}
-                    <div className="flex flex-col flex-1 overflow-x-hidden">
-                        <NavBar />
-                        <div className=" overflow-y-auto overflow-x-hidden flex-1 scrollbar-hide">
-                            {children}
+            {
+                isAuthenticated ?
+                    <div className="flex h-[100dvh]">
+                        {/* Sidebar */}
+                        <SideBar />
+                        {/* Main content */}
+                        <div className="flex flex-col flex-1 overflow-x-hidden">
+                            <NavBar />
+                            <div className="overflow-y-auto overflow-x-hidden flex-1 scrollbar-hide">
+                                {children}
+                            </div>
                         </div>
-                    </div>
-                </div> :
-                <>{children}</>
-        }
+                    </div> :
+                    <>{children}</>
+            }
         </>
     )
 }

@@ -11,6 +11,7 @@ import UploadButton from "@/components/ui/UploadButton"
 import { useUserStore } from "@/feature/user/store/userStore"
 import SearchableDropdown from "@/components/ui/SearchableDropdown"
 import { Company } from "../types/types"
+import CustomDropdown from "@/components/ui/CustomDropdown"
 
 type CompanyFormValues = {
     fullName: string
@@ -61,21 +62,21 @@ export default function CompaniesForm({
     initialData,
     usersLoading,
     userOptions
-    
+
 }: {
     onSubmit: (values: CompanyFormValues) => void
     onCancel: () => void
     mode?: 'add' | 'edit'
     initialData?: Company
-    usersLoading:boolean
-    userOptions: {id: string, value: string, label: string}[]
+    usersLoading: boolean
+    userOptions: { id: string, value: string, label: string }[]
 }) {
     const [tagInput, setTagInput] = useState("")
     const [assignInput, setAssignInput] = useState("")
     const [uploading, setUploading] = useState(false);
     const [uploadedFiles, setUploadedFiles] = useState<any[]>([]);
 
-    const getOptionLabel = (options: {id: string, label: string}[], value: string) => {
+    const getOptionLabel = (options: { id: string, label: string }[], value: string) => {
         // First try to find by ID
         const optionById = options.find(opt => opt.id === value);
         if (optionById) return optionById.label;
@@ -264,21 +265,19 @@ export default function CompaniesForm({
                         </FieldBlock>
 
                         <FieldBlock name="status" label="Status">
-                            <Field
-                                as="select"
-                                id="status"
+                            <CustomDropdown
                                 name="status"
-                                className="w-full text-sm rounded-md shadow-sm border  border-[var(--border-gray)] bg-background px-3 py-2 outline-none focus:ring-1 focus:ring-gray-400 focus:outline-none"
-                            >
-                                  <option value="" disabled>Select Status</option>
-
-                                <option value="Active">Active</option>
-                                <option value="FollowUp">Follow Up</option>
-                                <option value="inactive">inactive</option>
-
-
-                            </Field>
+                                value={values.status}
+                                onChange={(val) => setFieldValue("status", val)}
+                                placeholder="Select Status"
+                                options={[
+                                    { value: "Active", label: "Active" },
+                                    { value: "FollowUp", label: "Follow Up" },
+                                    { value: "inactive", label: "Inactive" },
+                                ]}
+                            />
                         </FieldBlock>
+
 
 
                         <TagInput name='Tags' values={values.tags} setValue={(values: string[]) => setFieldValue('tags', values)} input={tagInput} setInput={(value: string) => setTagInput(value)} />

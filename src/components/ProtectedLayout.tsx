@@ -5,11 +5,17 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import SideBar from "./layout/SideBar"
 import NavBar from "./layout/NavBar"
+import { useCompanyModalStore } from "@/feature/companies/stores/useCompanyModalStore"
+import CompaniesModel from "@/feature/companies/components/CompaniesModel"
+import CustomersModel from "@/feature/customers/components/CustomersModel"
+import { useCustomerModalStore } from "@/feature/customers/stores/useCustomersModel"
 
 export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
     const { status } = useSession()
     const [isAuthenticated, setIsAuthenticated] = useState(false)
     const router = useRouter()
+    const { isOpen: isCompanyOpen, closeModal: closeCompanyModal, mode: companyMode } = useCompanyModalStore();
+    const { isOpen: isCustomerOpen, closeModal: closeCustomerModal, mode: customerMode } =useCustomerModalStore();
 
     useEffect(() => {
         if (status === "unauthenticated" && window.location.pathname !== "/auth" && window.location.pathname !== "/verify") {
@@ -46,6 +52,8 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
                             {children}
                         </div>
                     </div>
+                    <CompaniesModel open={isCompanyOpen} onClose={closeCompanyModal} mode={companyMode} />
+                    <CustomersModel open={isCustomerOpen} onClose={closeCustomerModal} mode={customerMode} />
                 </div> :
                 <>{children}</>
         }

@@ -284,7 +284,7 @@ export default function DealForm({
                                 name="stage"
                                 value={values.stage}
                                 onChange={(val) => setFieldValue("stage", val)}
-                                openByDefault={true} // 👈 opens automatically when form loads
+                                openByDefault={false} // 👈 opens automatically when form loads
                                 options={[
                                 { value: "New", label: "New" },
                                 { value: "Contacted", label: "Contacted" },

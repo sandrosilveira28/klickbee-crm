@@ -60,11 +60,11 @@ export const sidebarItems: SidebarLink[] = [
     children: [
       {
         label: "Reports",
-        // route: "/tools/reports"
+        route: "/tools/reports"
       },
       {
         label: "Automation",
-        // route: "/tools/automation" 
+        route: "/tools/automation"
       },
     ],
   },

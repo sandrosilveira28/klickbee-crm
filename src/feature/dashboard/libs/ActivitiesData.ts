@@ -145,7 +145,7 @@ const generateActivityDescription = (activity: any): { action: string, descripti
         const hasDealNameUpdate = changedFields.includes('dealName');
         const hasCurrencyUpdate = changedFields.includes('currency');
 
-        let specificChanges = [];
+        const specificChanges = [];
 
         if (hasStageUpdate && updateDealData?.stage && prevDealData?.stage) {
           specificChanges.push(`moved stage from ${prevDealData.stage} to ${updateDealData.stage} `);
@@ -233,7 +233,7 @@ const generateActivityDescription = (activity: any): { action: string, descripti
         const hasPriorityUpdate = todoChangedFields.includes('priority');
         const hasDueDateUpdate = todoChangedFields.includes('dueDate') || todoChangedFields.includes('deadline');
 
-        let specificChanges = [];
+        const specificChanges = [];
 
         if (hasStatusUpdate && todoUpdateData?.status !== prevTodoData?.status) {
           const newStatus = todoUpdateData?.status ;
@@ -328,7 +328,7 @@ const generateActivityDescription = (activity: any): { action: string, descripti
         const hasLocationUpdate = meetingChangedFields.includes('location') || meetingChangedFields.includes('venue');
         const hasAttendeeUpdate = meetingChangedFields.includes('attendees') || meetingChangedFields.includes('participants');
 
-        let specificChanges = [];
+        const specificChanges = [];
 
         if (hasTitleUpdate && meetingUpdateData?.title !== prevMeetingData?.title) {
           specificChanges.push(`renamed meeting`);
@@ -430,7 +430,7 @@ const generateActivityDescription = (activity: any): { action: string, descripti
         const hasNotesUpdate = prospectChangedFields.includes('notes') || prospectChangedFields.includes('description');
         const hasTagsUpdate = prospectChangedFields.includes('tags');
 
-        let specificChanges = [];
+        const specificChanges = [];
 
         if (hasNameUpdate && prospectUpdateData?.fullName !== prevProspectData?.fullName) {
           specificChanges.push(`updated name`);
@@ -537,7 +537,7 @@ const generateActivityDescription = (activity: any): { action: string, descripti
         const hasNotesUpdate = contactChangedFields.includes('notes') || contactChangedFields.includes('description');
         const hasTagsUpdate = contactChangedFields.includes('tags');
 
-        let specificChanges = [];
+        const specificChanges = [];
 
         if (hasNameUpdate && contactUpdateData?.fullName !== prevContactData?.fullName) {
           specificChanges.push(`updated name`);
@@ -644,7 +644,7 @@ const generateActivityDescription = (activity: any): { action: string, descripti
         const hasNotesUpdate = companyChangedFields.includes('notes') || companyChangedFields.includes('description');
         const hasTagsUpdate = companyChangedFields.includes('tags');
 
-        let specificChanges = [];
+        const specificChanges = [];
 
         if (hasNameUpdate && companyUpdateData?.fullName !== prevCompanyData?.fullName) {
           specificChanges.push(`updated name`);

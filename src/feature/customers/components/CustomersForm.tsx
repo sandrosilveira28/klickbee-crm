@@ -52,7 +52,7 @@ export default function CustomerForm({
     onCancel: () => void
     mode?: 'add' | 'edit'
     initialData?: Customer,
-    usersLoading: Boolean,
+    usersLoading: boolean,
     userOptions: { id: string, value: string, label: string }[]
 }) {
     const [tagInput, setTagInput] = useState("")

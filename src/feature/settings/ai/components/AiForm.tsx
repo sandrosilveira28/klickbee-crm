@@ -47,7 +47,7 @@ export default function Ai() {
                 <h2 className="text-base font-semibold leading-6 tracking-0 text-[#09090B] px-3 py-4">AI Context</h2>
                 <hr className="text-[#E4E4E7] " />
                 <div className="px-3 py-4">
-                    <p className="text-sm font-normal leading-[20px] text-[#71717A] text-muted">Please fill in the fields below to help us better understand your company's background and communication style. This information allows our AI to generate content, suggestions, or insights that are relevant, personalized, and aligned with your industry, tone, and objectives.</p>
+                    <p className="text-sm font-normal leading-[20px] text-[#71717A] text-muted">Please fill in the fields below to help us better understand your company&apos;s background and communication style. This information allows our AI to generate content, suggestions, or insights that are relevant, personalized, and aligned with your industry, tone, and objectives.</p>
                     <h5 className="font-medium text-sm leading-[20px] tracking-[0px] text-black mt-4 mb-1">Your Company Name</h5>
                     <textarea placeholder="Enter your company name" className="h-[80px] w-full rounded-md border border-[#E4E4E7] bg-white px-3 py-1.5 pr-10 text-sm font-normal text-[#09090B]  outline-none" />
                     <h5 className="font-medium text-sm leading-[20px] tracking-[0px] text-black mt-2 mb-1">Your Company Activities</h5>

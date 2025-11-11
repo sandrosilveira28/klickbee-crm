@@ -12,6 +12,12 @@
   <img alt="Made by Stralya" src="https://img.shields.io/badge/made%20by-Stralya-4B5563?style=flat-square">
 </p>
 
+<h2 align="center"> 
+  
+  [How does it looks like ?](https://www.figma.com/design/N4VAfIOJaAAtqzSjGbyFJ7/Klickbee--Community) 
+  
+</h2>
+
 ---
 
 ### 🧠 What is Klickbee CRM?

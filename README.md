@@ -25,7 +25,7 @@ Built for agencies, freelancers, and businesses who need clarity, sovereignty, a
 
 ### 🧩 Architecture
 
-Klickbee CRM follows a **Feature-Driven Architecture (FDA)** — each feature is self-contained with its own logic, UI,
+Klickbee CRM follows a [**Feature-Driven Architecture (FDA)**](https://github.com/Klickbee/feature-driven-architecture) — each feature is self-contained with its own logic, UI,
 and data layer.
 
 ```

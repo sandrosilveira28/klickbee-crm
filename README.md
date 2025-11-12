@@ -1,9 +1,11 @@
+
+<h1 align="center">Klickbee CRM</h1>
+
 <p align="center">
   <a href="https://app.supademo.com/demo/cmhvs1cli17ry17y0j39gcp3n?utm_source=github">
     <img src="https://img.shields.io/badge/A%20demo%20is%20better%20than%20a%20thousand%20words-black?style=for-the-badge&logo=Supabase&logoColor=white" alt="A demo is better than a thousand words" />
   </a>
 </p>
-<h1 align="center">Klickbee CRM</h1>
 
 <p align="center"><strong>The open-source CRM built for agencies, freelancers, and digital businesses.</strong></p>
 

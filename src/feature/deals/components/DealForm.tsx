@@ -75,6 +75,7 @@ export default function DealForm({
     usersLoading: _usersLoading,
     userOptions,
     currentUserId,
+    defaultStage,
 }: {
     onSubmit: (values: DealFormValues) => void
     onCancel: () => void
@@ -83,10 +84,13 @@ export default function DealForm({
     usersLoading: boolean
     userOptions: { id: string; value: string; label: string }[]
     currentUserId?: any
+    defaultStage?: Deal["stage"]
 }) {
     const [tagInput, setTagInput] = useState("")
     const [uploading, setUploading] = useState(false)
     const [uploadedFiles, setUploadedFiles] = useState<any[]>([])
+    const { lastCompanyId } = useCompaniesStore()
+    const { lastContactId } = useCustomersStore()
 
     useEffect(() => {
         useCompaniesStore.getState().fetchCompanies()
@@ -161,6 +165,9 @@ export default function DealForm({
 
         return {
             ...initialValues,
+            stage: defaultStage || initialValues.stage,
+            company: lastCompanyId || "",
+            contact: lastContactId || "",
             owner: userOptions.find((u) => u.id === currentUserId)?.id || "",
         }
     }
@@ -179,7 +186,7 @@ export default function DealForm({
 
     useEffect(() => {
         reset(getInitialValues())
-    }, [initialData, mode, userOptions, currentUserId, reset])
+    }, [initialData, mode, userOptions, currentUserId, lastCompanyId, lastContactId, defaultStage, reset])
 
     const values = watch()
 

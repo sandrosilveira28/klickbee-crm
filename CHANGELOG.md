@@ -1,3 +1,21 @@
+# [1.1.0](https://gitlab.stralya.com/klickbee/klickbee-crm/compare/v1.0.0...v1.1.0) (2025-12-01)
+
+
+### Bug Fixes
+
+* add debug step to output Gitea token for troubleshooting ([e21fc0c](https://gitlab.stralya.com/klickbee/klickbee-crm/commit/e21fc0c19be62b11d6d6ef383568463810b9fc11))
+* remove debug step for Gitea token from release workflow ([8fc8fcd](https://gitlab.stralya.com/klickbee/klickbee-crm/commit/8fc8fcdb08f6e694b28e3b9cdff18289905a07a0))
+* remove debug step for Gitea token from release workflow ([2722b69](https://gitlab.stralya.com/klickbee/klickbee-crm/commit/2722b69618fa0300855076380509ccaa306dd4b1))
+* update Gitea URL in release configuration for improved flexibility ([ff396c6](https://gitlab.stralya.com/klickbee/klickbee-crm/commit/ff396c6cc987e91ec340bf4d5ebe418a017c8dba))
+* update GitLab CI configuration and add repository URL for semantic release ([8c20cf9](https://gitlab.stralya.com/klickbee/klickbee-crm/commit/8c20cf93b581615c1730af887fa91234b24b499e))
+* update semantic release commands to use relative paths for configuration files ([c29832a](https://gitlab.stralya.com/klickbee/klickbee-crm/commit/c29832ad59e753f58e96cf19635014a14b3f0a93))
+
+
+### Features
+
+* add @semantic-release/gitlab dependency to package.json ([baed223](https://gitlab.stralya.com/klickbee/klickbee-crm/commit/baed223e3c38f716adc1c5aea33b0247f4cc12c3))
+* add GitLab CI/CD configuration for build and release stages ([83b8f18](https://gitlab.stralya.com/klickbee/klickbee-crm/commit/83b8f184fbdb7986a309e573a4d9f09860bfedca))
+
 # 1.0.0 (2025-11-28)
 
 

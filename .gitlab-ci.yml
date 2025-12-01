@@ -12,8 +12,6 @@ build_job:
     - npm run build
   only:
     - branches
-  except:
-    - main   # ou ajuste selon ton workflow
   artifacts:
     when: always
     paths:

